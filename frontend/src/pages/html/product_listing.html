@@ -1,0 +1,554 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Marketplace | AgriMarket Connect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #bfcaba;
+            border-radius: 10px;
+        }
+        .product-card:hover .quick-add {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#a3f69c",
+                    "on-secondary-container": "#00731e",
+                    "tertiary-container": "#a05e00",
+                    "background": "#fcf9f8",
+                    "surface-container-highest": "#e5e2e1",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#303030",
+                    "on-primary-container": "#cbffc2",
+                    "on-surface-variant": "#40493d",
+                    "surface-variant": "#e5e2e1",
+                    "on-secondary-fixed-variant": "#005313",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#005312",
+                    "secondary": "#006e1c",
+                    "primary-fixed-dim": "#88d982",
+                    "outline": "#707a6c",
+                    "surface-tint": "#1b6d24",
+                    "surface": "#fcf9f8",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-container": "#ffeee2",
+                    "tertiary-fixed": "#ffdcbe",
+                    "secondary-fixed": "#94f990",
+                    "on-error": "#ffffff",
+                    "primary": "#0d631b",
+                    "inverse-primary": "#88d982",
+                    "on-tertiary-fixed": "#2c1600",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#2e7d32",
+                    "on-background": "#1b1c1c",
+                    "surface-dim": "#dcd9d9",
+                    "secondary-fixed-dim": "#78dc77",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#7e4900",
+                    "surface-bright": "#fcf9f8",
+                    "tertiary-fixed-dim": "#ffb870",
+                    "surface-container": "#f0eded",
+                    "surface-container-low": "#f6f3f2",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#1b1c1c",
+                    "surface-container-high": "#eae7e7",
+                    "on-tertiary-fixed-variant": "#693c00",
+                    "inverse-on-surface": "#f3f0ef",
+                    "on-secondary-fixed": "#002204",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed": "#002204",
+                    "secondary-container": "#91f78e",
+                    "outline-variant": "#bfcaba"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "48px",
+                    "xl": "80px",
+                    "xs": "4px",
+                    "gutter": "24px",
+                    "sm": "12px",
+                    "md": "24px",
+                    "base": "8px",
+                    "margin-desktop": "64px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Hanken Grotesk"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Bar -->
+<header class="bg-surface/80 backdrop-blur-md dark:bg-surface-container/80 font-title-lg text-title-lg docked full-width top-0 sticky z-50 shadow-sm transition-all duration-300">
+<div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-7xl mx-auto">
+<!-- Brand Logo -->
+<div class="font-headline-md text-headline-md font-black text-primary dark:text-primary-fixed flex items-center gap-2">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">eco</span>
+                ExVeg</div>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 transition-colors duration-200" href="#">Marketplace</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors duration-200" href="#">Nursery</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors duration-200" href="#">Tools</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors duration-200" href="#">Analytics</a>
+</nav>
+<!-- Search & Actions -->
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 w-64 focus:ring-2 focus:ring-primary/20 focus:w-80 transition-all duration-300 font-label-md" placeholder="Search seeds, tools, machinery..." type="text">
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="material-symbols-outlined hover:text-primary transition-colors duration-200">notifications</button>
+<button class="material-symbols-outlined hover:text-primary transition-colors duration-200 relative">
+                        shopping_cart
+                        <span class="absolute -top-1 -right-1 bg-tertiary text-[10px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
+</button>
+<button class="material-symbols-outlined hover:text-primary transition-colors duration-200">account_circle</button>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-desktop py-lg flex gap-gutter">
+<!-- Sidebar Filters -->
+<aside class="w-64 flex-shrink-0 space-y-md hidden lg:block">
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl shadow-sm sticky top-24">
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-title-lg text-title-lg flex items-center gap-2">
+<span class="material-symbols-outlined">filter_list</span> Filters
+                    </h2>
+<button class="text-label-sm text-primary hover:underline">Clear All</button>
+</div>
+<!-- Segmented Control for Packs -->
+<div class="bg-surface-container-high rounded-lg p-1 flex mb-md">
+<button class="flex-1 text-label-sm py-1.5 rounded-md bg-white shadow-sm font-semibold">Home Gardener</button>
+<button class="flex-1 text-label-sm py-1.5 rounded-md text-on-surface-variant hover:bg-white/50">Farmer</button>
+</div>
+<!-- Categories -->
+<div class="border-b border-outline-variant pb-md mb-md">
+<div class="flex items-center justify-between mb-sm cursor-pointer group">
+<span class="font-label-md font-bold">Category</span>
+<span class="material-symbols-outlined group-hover:text-primary">expand_more</span>
+</div>
+<div class="space-y-2">
+<label class="flex items-center gap-3 text-label-md hover:text-primary cursor-pointer">
+<input checked="" class="rounded border-outline text-primary focus:ring-primary w-4 h-4" type="checkbox"> Seeds &amp; Bulbs
+                        </label>
+<label class="flex items-center gap-3 text-label-md hover:text-primary cursor-pointer">
+<input class="rounded border-outline text-primary focus:ring-primary w-4 h-4" type="checkbox"> Irrigation Tools
+                        </label>
+<label class="flex items-center gap-3 text-label-md hover:text-primary cursor-pointer">
+<input class="rounded border-outline text-primary focus:ring-primary w-4 h-4" type="checkbox"> Organic Fertilizers
+                        </label>
+<label class="flex items-center gap-3 text-label-md hover:text-primary cursor-pointer">
+<input class="rounded border-outline text-primary focus:ring-primary w-4 h-4" type="checkbox"> Garden Decor
+                        </label>
+</div>
+</div>
+<!-- Price Range -->
+<div class="border-b border-outline-variant pb-md mb-md">
+<div class="flex items-center justify-between mb-sm">
+<span class="font-label-md font-bold">Price Range</span>
+</div>
+<input class="w-full accent-primary h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer mb-2" type="range">
+<div class="flex justify-between text-label-sm text-on-surface-variant">
+<span class="">$0</span>
+<span class="">$2,500+</span>
+</div>
+</div>
+<!-- Seller Rating -->
+<div class="border-b border-outline-variant pb-md mb-md">
+<div class="flex items-center justify-between mb-sm">
+<span class="font-label-md font-bold">Seller Rating</span>
+</div>
+<div class="space-y-2">
+<label class="flex items-center gap-3 text-label-md cursor-pointer group">
+<input class="text-primary focus:ring-primary" name="rating" type="radio">
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<span class="text-label-sm">&amp; Up</span>
+</label>
+</div>
+</div>
+<!-- Location -->
+<div>
+<div class="flex items-center justify-between mb-sm">
+<span class="font-label-md font-bold">Location</span>
+</div>
+<select class="w-full bg-surface-container-low border-outline-variant rounded-lg text-label-md focus:border-primary focus:ring-primary">
+<option>Near Me (Within 50mi)</option>
+<option>Nationwide</option>
+<option>Global Exports</option>
+</select>
+</div>
+</div>
+</aside>
+<!-- Product Grid Content -->
+<section class="flex-1">
+<!-- Grid Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-md gap-4">
+<div>
+<h1 class="font-headline-md text-headline-md">Seed &amp; Plant Marketplace</h1>
+<p class="text-on-surface-variant text-body-md">Showing 1–12 of 248 results</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant">
+<span class="text-label-sm font-bold">Sort By:</span>
+<select class="bg-transparent border-none p-0 text-label-md focus:ring-0">
+<option>Most Relevant</option>
+<option>Price: Low to High</option>
+<option>Newest Arrivals</option>
+</select>
+</div>
+<div class="flex gap-1 border border-outline-variant rounded-lg p-1 bg-surface-container">
+<button class="p-1 rounded bg-white shadow-sm material-symbols-outlined">grid_view</button>
+<button class="p-1 rounded text-on-surface-variant material-symbols-outlined">view_list</button>
+</div>
+</div>
+</div>
+<!-- Grid Items -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
+<!-- Product Card 1 -->
+<div class="product-card group relative bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
+<div class="relative h-64 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A macro photograph of premium heirloom tomato seeds spread out on a rustic wooden table with high-end studio lighting. The seeds are golden and textured, arranged artistically next to a fresh, vibrant red heirloom tomato slice. The atmosphere is organic, clean, and professional, utilizing a primary green and warm orange color palette for a high-end agricultural marketplace look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB96H2Jnix8mcxyJqTWKx3brJMc5gYR-xqckq3hlgjMy-uAzbi9C4Ev_mTX0rVglBJM9TicApo8WxW3tJK9emyFAuzzmomZDn9PBoaxX8lOBIg63_6y7elAm9hnlTbIgA1IbjYDdASYDd1eUzji1TJPE6smji7nazr3gFEL19pRtYs3DYBmpZ83IRAphNEhHXjkfZePG6QauQN2Rjv7eRUCyYWKVP2QYAW7me0ONAr-EVPT2-VKfhSMGB9LkT8H2rnMiAW5GUnzgvk">
+<span class="absolute top-3 left-3 bg-tertiary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Sale 20% Off</span>
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<!-- Quick Add Overlay -->
+<div class="quick-add absolute inset-0 bg-primary/20 backdrop-blur-[2px] flex items-center justify-center opacity-0 translate-y-4 transition-all duration-300">
+<button class="bg-primary text-white font-label-md px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center gap-1 text-tertiary mb-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.9</span>
+<span class="text-on-surface-variant text-[10px] font-normal">(128)</span>
+</div>
+<h3 class="font-title-lg text-on-surface line-clamp-1 mb-1">Heirloom Roma Tomato Seeds</h3>
+<div class="flex items-center gap-1.5 mb-2">
+<span class="text-label-sm text-on-surface-variant">By GreenLeaf Farms</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;" title="Verified Seller">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-md text-primary">$12.50</span>
+<span class="text-label-sm text-on-surface-variant line-through">$15.00</span>
+</div>
+</div>
+</div>
+<!-- Product Card 2 (Skeleton Loading Example) -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm animate-pulse">
+<div class="h-64 bg-surface-container-high"></div>
+<div class="p-4 space-y-3">
+<div class="h-4 bg-surface-container-high rounded w-1/4"></div>
+<div class="h-6 bg-surface-container-high rounded w-3/4"></div>
+<div class="h-4 bg-surface-container-high rounded w-1/2"></div>
+<div class="h-8 bg-surface-container-high rounded w-1/3 mt-4"></div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="product-card group relative bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
+<div class="relative h-64 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close up of a smart irrigation controller with a digital LCD screen displaying soil moisture analytics, set against a blurred background of a lush green greenhouse. The lighting is soft and natural, emphasizing the professional build quality of the tech product. The overall aesthetic is sleek and corporate, blending technology with agriculture through a palette of forest greens and pristine whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFh5Ga7UQ_SqIghDFCFS_2BaeEe5Ws3LvPwtnJQMHWaMafHn3-jhpFDy_ZAFbNgaJ2KK64H0hDAaHyXJj0eAo8tEnqII-5g7dK0Df6c71Qz2oLgMMaPEoGbvaVG8TCW0wlZouxfrU6UDIn09iVGsG_ocvf_6p4VFCzC_rm8MgxvCBhOmSwzJwix0EvozDW7S5TIcCi245eK1ogMgq0If8h-hpdBLPXOpUz1czim6EO66On1ZSH2r0nOBB36mACTWoDUqV51ogM7_U">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="quick-add absolute inset-0 bg-primary/20 backdrop-blur-[2px] flex items-center justify-center opacity-0 translate-y-4 transition-all duration-300">
+<button class="bg-primary text-white font-label-md px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center gap-1 text-tertiary mb-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.7</span>
+<span class="text-on-surface-variant text-[10px] font-normal">(42)</span>
+</div>
+<h3 class="font-title-lg text-on-surface line-clamp-1 mb-1">Smart Soil Sensor Node</h3>
+<div class="flex items-center gap-1.5 mb-2">
+<span class="text-label-sm text-on-surface-variant">By AgriTech Solutions</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;" title="Verified Seller">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-md text-primary">$189.00</span>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="product-card group relative bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
+<div class="relative h-64 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A set of premium forged steel gardening hand tools including a trowel, rake, and fork, lying on a clean white surface with organic soil accents. The tools feature dark wood handles and polished metal heads. The lighting is crisp and modern, creating sharp reflections and a premium B2B SaaS feeling. Color scheme focused on deep forest green and silver metallic finishes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBivqGJp1Rxmei6RaVO59Ae2q4iMqEtPeca6UMnL4lyZQiqK_YdCdUjbBFuoolUnTodpL4kBt-W-tn6TbGg9J0TOBueUT3REwvMSHi7aFJoyMyVqVhcp-k3ds5wkeaQCwZXq7eC6C3DBCLooqECyGhBZ8RNsx2NTkWSKM3AWpDMlX7spgsYKQlfA6TsgeJ-9gaHhuElTv0ErHFTVXBw7d1Vzqz5PpYGu5P6RApn0Csm9VIqkz3pnIKGU5ZenLOwgQ88rrOofCsXs_E">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="quick-add absolute inset-0 bg-primary/20 backdrop-blur-[2px] flex items-center justify-center opacity-0 translate-y-4 transition-all duration-300">
+<button class="bg-primary text-white font-label-md px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center gap-1 text-tertiary mb-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">5.0</span>
+<span class="text-on-surface-variant text-[10px] font-normal">(85)</span>
+</div>
+<h3 class="font-title-lg text-on-surface line-clamp-1 mb-1">Forged Steel Tool Kit (3pc)</h3>
+<div class="flex items-center gap-1.5 mb-2">
+<span class="text-label-sm text-on-surface-variant">By Heritage Craft</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;" title="Verified Seller">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-md text-primary">$45.00</span>
+</div>
+</div>
+</div>
+<!-- Additional grid items to demonstrate scale -->
+<!-- Repeat pattern of Cards for variety -->
+<div class="product-card group relative bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
+<div class="relative h-64 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A high-resolution product shot of premium liquid organic fertilizer in a sleek, minimalist bottle. The bottle is translucent forest green with a professional white label and modern typography. It is placed on a light gray stone surface with soft ambient lighting that emphasizes a premium and eco-friendly aesthetic, suitable for a sophisticated agricultural marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFnJBZrUZOlHfBjA7ecVLEB4TXrbgmcvZ-9mnnlhu6zmanwPCFXt4LyaEoGFzQCu37rxybj9R-lzDNv-Bp_GULVYeKB38RaEkiZETWEkUw6dgCt2lBCec8JrvKviZ9jGdSOIwU6Dzz6n_Sc0Q0y7_kdwf2N_ZpvnGLNOKtKBofxEIJvRuXkB5_H2h0bNv-SK554z9zmGeoIZMwdGpYnwlJ9MhVnQEOvds-pe4RD4NokIG5puftpkcqFSH6iV-9Lg7_HePriQuU0J4">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="quick-add absolute inset-0 bg-primary/20 backdrop-blur-[2px] flex items-center justify-center opacity-0 translate-y-4 transition-all duration-300">
+<button class="bg-primary text-white font-label-md px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center gap-1 text-tertiary mb-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.8</span>
+<span class="text-on-surface-variant text-[10px] font-normal">(210)</span>
+</div>
+<h3 class="font-title-lg text-on-surface line-clamp-1 mb-1">Bio-Boost Organic Liquid</h3>
+<div class="flex items-center gap-1.5 mb-2">
+<span class="text-label-sm text-on-surface-variant">By EcoHarvest Co.</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;" title="Verified Seller">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-md text-primary">$32.99</span>
+</div>
+</div>
+</div>
+<div class="product-card group relative bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
+<div class="relative h-64 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A beautiful array of vibrant flower bulbs including tulips and daffodils, arranged in a premium wooden export crate. The crate features professional branding stamps. The lighting is warm and golden, evoking the feeling of a crisp morning in a nursery. The image captures the textures of the bulbs and the rustic wood, presented with a modern, high-quality photographic finish." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArdx-I-hZSGEsmvhu9K63JVqTGBqlClZep4hMXbOe7YVL0nMyJNj2O3ouU2bszPtR7Af1w1IO2VW8Q_qPQSXIQj8l0ZJnsI6SWknxe9rCmqKUjZOR09KJh1MUbPIkFv54mZryhWSU9iYrcicswfRuMLIed-0qn--HstZ2s4LvP8cJ8e4lyazy9x8MQ36t1bLCsUXKKk3inYiLpg2ZZOD4-fMFPaqMhJwKacfzk0awLK8LY4achWqVnhszplNQuN70e5W0XBGbJ71w">
+<span class="absolute top-3 left-3 bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Bestseller</span>
+<div class="quick-add absolute inset-0 bg-primary/20 backdrop-blur-[2px] flex items-center justify-center opacity-0 translate-y-4 transition-all duration-300">
+<button class="bg-primary text-white font-label-md px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center gap-1 text-tertiary mb-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.9</span>
+<span class="text-on-surface-variant text-[10px] font-normal">(340)</span>
+</div>
+<h3 class="font-title-lg text-on-surface line-clamp-1 mb-1">Spring Bloom Bulb Collection</h3>
+<div class="flex items-center gap-1.5 mb-2">
+<span class="text-label-sm text-on-surface-variant">By Dutch Heritage</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;" title="Verified Seller">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-md text-primary">$28.00</span>
+</div>
+</div>
+</div>
+<!-- Skeleton Loader placeholders for visual rhythm -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm animate-pulse opacity-60">
+<div class="h-64 bg-surface-container-high"></div>
+<div class="p-4 space-y-3">
+<div class="h-4 bg-surface-container-high rounded w-1/4"></div>
+<div class="h-6 bg-surface-container-high rounded w-3/4"></div>
+<div class="h-4 bg-surface-container-high rounded w-1/2"></div>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm animate-pulse opacity-40">
+<div class="h-64 bg-surface-container-high"></div>
+<div class="p-4 space-y-3">
+<div class="h-4 bg-surface-container-high rounded w-1/4"></div>
+<div class="h-6 bg-surface-container-high rounded w-3/4"></div>
+<div class="h-4 bg-surface-container-high rounded w-1/2"></div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-xl flex items-center justify-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">3</button>
+<span class="px-2 text-outline">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">12</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface border-t border-outline-variant font-body-md text-body-md full-width">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-xl max-w-7xl mx-auto">
+<div class="space-y-4">
+<div class="font-headline-lg text-headline-lg text-primary">AgriMarket</div>
+<p class="text-on-surface-variant leading-relaxed">Empowering sustainable growth by connecting local growers with professional equipment and high-quality supplies.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+</a>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-bold text-on-surface">Marketplace</h4>
+<nav class="flex flex-col gap-2">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Seller Hub</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Bulk Purchasing</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Logistics Support</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Quality Guarantee</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h4 class="font-bold text-on-surface">Company</h4>
+<nav class="flex flex-col gap-2">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">About Us</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Sustainability</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h4 class="font-bold text-on-surface">Newsletter</h4>
+<p class="text-label-sm text-on-surface-variant">Stay updated with fresh arrivals and planting tips.</p>
+<div class="flex gap-2">
+<input class="bg-white border border-outline-variant rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-primary/20" placeholder="Email" type="email">
+<button class="bg-primary text-white px-4 py-2 rounded-lg font-bold hover:bg-primary-container transition-colors">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-margin-desktop py-base border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center text-label-sm text-on-surface-variant/70">
+<div class="">© 2024 AgriMarket Connect. Cultivating growth through technology.</div>
+<div class="flex gap-6 mt-4 md:mt-0">
+<span class="">English (US)</span>
+<span class="">USD ($)</span>
+</div>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/50 flex justify-around items-center py-3 px-6 z-50">
+<button class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="text-[10px] font-bold">Market</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+<span class="text-[10px]">Explore</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-[10px]">Cart</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px]">Profile</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction: Active state logic for navigation links
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => {
+                    l.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary', 'pb-1');
+                    l.classList.add('text-on-surface-variant', 'dark:text-outline-variant');
+                });
+                link.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary', 'pb-1');
+                link.classList.remove('text-on-surface-variant', 'dark:text-outline-variant');
+            });
+        });
+
+        // Toggle logic for filters on mobile (placeholder for real functionality)
+        document.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('py-2', 'shadow-md');
+                header.classList.remove('py-4', 'shadow-sm');
+            } else {
+                header.classList.add('py-4', 'shadow-sm');
+                header.classList.remove('py-2', 'shadow-md');
+            }
+        });
+    </script>
+
+
+</body></html>

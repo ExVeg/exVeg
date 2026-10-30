@@ -1,0 +1,556 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgriMarket Connect | Verified Agricultural Products</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#a3f69c",
+                        "on-secondary-container": "#00731e",
+                        "tertiary-container": "#a05e00",
+                        "background": "#fcf9f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#cbffc2",
+                        "on-surface-variant": "#40493d",
+                        "surface-variant": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#005313",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#005312",
+                        "secondary": "#006e1c",
+                        "primary-fixed-dim": "#88d982",
+                        "outline": "#707a6c",
+                        "surface-tint": "#1b6d24",
+                        "surface": "#fcf9f8",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffeee2",
+                        "tertiary-fixed": "#ffdcbe",
+                        "secondary-fixed": "#94f990",
+                        "on-error": "#ffffff",
+                        "primary": "#0d631b",
+                        "inverse-primary": "#88d982",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#2e7d32",
+                        "on-background": "#1b1c1c",
+                        "surface-dim": "#dcd9d9",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#7e4900",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-secondary-fixed": "#002204",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#002204",
+                        "secondary-container": "#91f78e",
+                        "outline-variant": "#bfcaba"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "48px",
+                        "xl": "80px",
+                        "xs": "4px",
+                        "gutter": "24px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "base": "8px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="bg-surface/80 backdrop-blur-md dark:bg-surface-container/80 font-title-lg text-title-lg docked full-width top-0 sticky shadow-sm z-50">
+<nav class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-base">
+<span class="font-headline-md text-headline-md font-black text-primary">ExVeg</span>
+</div>
+<div class="hidden md:flex items-center gap-lg">
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Marketplace</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Nursery</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Tools</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Analytics</a>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors" data-icon="account_circle">account_circle</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors" data-icon="shopping_cart">shopping_cart</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md hover:scale-95 transition-transform duration-150">Register</button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative w-full h-[85vh] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="A wide panoramic shot of a lush, professional greenhouse combined with a small, sunlit home backyard garden. A professional farmer in a straw hat is inspecting organic tomato plants while a young home gardener happily tends to a flower box nearby. The lighting is warm and golden, emphasizing growth and productivity in a modern agricultural setting with clean corporate aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF0w-B9ciVIbZgxLtGI_dG0JXZtX4reJ7-EDL3IiATHRi0-9pcJTO56BKMPBdCrg_k6prMMy_jNOTinEQHmmlmwK5IftFGXkQpRj6CdThn5oZVjLZHEoJXbzM51Pe-hplhcVBkjxhIh9k6zjRzp1eblUSfsGKE5GcDGCUfQ9DG0RWI0Wt2FIZfmDXJj-dO1TKYxMWN6ZOs38-7wkGs7C2BahRu8vaQUpdOMxws_b0RrERcF5IqLYLy0Wh3TlQU7BvZcsRj4tKzwIo">
+</div>
+<div class="relative z-20 px-margin-desktop max-w-4xl">
+<div class="reveal active">
+<h1 class="font-display-lg text-display-lg text-on-primary mb-sm">
+                        Verified Agricultural Products for Farmers &amp; Home Gardeners
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-primary/90 mb-lg max-w-2xl">
+                        Buy seeds, fertilizers, tools, and gardening essentials directly from trusted sellers. Join a community built on quality and growth.
+                    </p>
+<div class="flex flex-wrap gap-md">
+<button class="bg-primary-fixed text-on-primary-fixed px-xl py-4 rounded-lg font-title-lg font-bold hover:bg-primary transition-colors flex items-center gap-sm">
+                            Shop Now
+                            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="border-2 border-on-primary text-on-primary px-xl py-4 rounded-lg font-title-lg font-bold hover:bg-on-primary hover:text-primary transition-all">
+                            Become a Seller
+                        </button>
+</div>
+</div>
+</div>
+<!-- Floating Asset -->
+<div class="absolute right-margin-desktop bottom-24 hidden xl:block animate-float">
+<div class="glass-card p-lg rounded-xl flex items-center gap-md shadow-lg border border-white/50">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<p class="font-title-lg text-primary">100% Quality Seeds</p>
+<p class="font-label-sm text-on-surface-variant">Verified by Experts</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Categories Section -->
+<section class="py-xl px-margin-desktop max-w-7xl mx-auto">
+<div class="flex items-center justify-between mb-lg reveal active">
+<h2 class="font-headline-lg text-headline-lg">Shop by Category</h2>
+<a class="text-primary font-label-md flex items-center gap-xs" href="#">View All <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-md">
+<!-- Category Cards -->
+<script>
+                    const categories = [
+                        { name: "Seeds", icon: "potted_plant" },
+                        { name: "Fertilizers", icon: "science" },
+                        { name: "Pesticides", icon: "sanitizer" },
+                        { name: "Tools", icon: "hand_mechanic" },
+                        { name: "Nursery", icon: "nature_people" },
+                        { name: "Organic", icon: "eco" },
+                        { name: "Irrigation", icon: "water_drop" }
+                    ];
+                    categories.forEach((cat, index) => {
+                        document.write(`
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal" style="transition-delay: ${index * 50}ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="${cat.icon}">${cat.icon}</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">${cat.name}</span>
+                            </div>
+                        `);
+                    });
+                </script>
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal active" style="transition-delay: 0ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="potted_plant">potted_plant</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Seeds</span>
+                            </div>
+                        
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal active" style="transition-delay: 50ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="science">science</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Fertilizers</span>
+                            </div>
+                        
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal active" style="transition-delay: 100ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="sanitizer">sanitizer</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Pesticides</span>
+                            </div>
+                        
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal active" style="transition-delay: 150ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="hand_mechanic">hand_mechanic</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Tools</span>
+                            </div>
+                        
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal active" style="transition-delay: 200ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="nature_people">nature_people</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Nursery</span>
+                            </div>
+                        
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal active" style="transition-delay: 250ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="eco">eco</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Organic</span>
+                            </div>
+                        
+                            <div class="flex flex-col items-center gap-sm group cursor-pointer reveal active" style="transition-delay: 300ms">
+                                <div class="w-16 h-16 md:w-20 md:h-20 bg-surface-container rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-primary-container group-hover:scale-110">
+                                    <span class="material-symbols-outlined text-primary group-hover:text-on-primary-container text-3xl" data-icon="water_drop">water_drop</span>
+                                </div>
+                                <span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Irrigation</span>
+                            </div>
+                        
+</div>
+</section>
+<!-- Featured Products -->
+<section class="bg-surface-container-low py-xl px-margin-desktop">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-center justify-between mb-lg reveal active">
+<div>
+<h2 class="font-headline-lg text-headline-lg">Featured Products</h2>
+<p class="text-on-surface-variant font-body-md">Hand-picked essentials for your next cultivation.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Product Card 1 -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col reveal active">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="High-quality organic tomato seeds in a premium minimal packaging on a clean white background. A professional seal 'Verified Seller' is visible on the corner. Soft studio lighting highlights the texture of the packaging and the vibrant colors of the tomato illustration. Modern corporate e-commerce photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz_mdZvpBL6MwHUKf4JeArttfhCnWREY0M0XcrDsXQjEyrcIitl85XK4T3PUBTsy-5WwS4vm79lcBiRz0rKzpTTIx4WV7wNHOeOWFP6K-EPDXMc70AiWG4-AKMDlpW52vKzk2ssFs3XXCqpMTfCQIx5i-YwUEK7waMnrDCPkVfEJmvV1o8sYXzRJmcXx-Jnk6tYcMgUlY_ZtTo7ys8UtOu-N3XX4uYr59Gh7LLmB0tm290Bk3q1QhJaEDeGgLyqTx5s9Yv4cRARlg">
+<div class="absolute top-sm right-sm bg-tertiary text-on-tertiary px-base py-xs rounded-full font-label-sm">-15%</div>
+<div class="absolute bottom-0 left-0 right-0 p-sm translate-y-full group-hover:translate-y-0 transition-transform bg-primary/20 backdrop-blur-sm">
+<button class="w-full bg-primary text-white py-2 rounded-lg font-label-md flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add_shopping_cart">add_shopping_cart</span>
+                                    Quick Add
+                                </button>
+</div>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-tertiary-container text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1">verified</span>
+<span class="font-label-sm text-on-surface-variant">GreenHarvest Co.</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">Premium Heirloom Tomato Seeds</h3>
+<div class="flex items-center gap-xs mb-md">
+<span class="material-symbols-outlined text-[#ffb870] text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="font-label-sm text-on-surface">4.8</span>
+<span class="font-label-sm text-on-surface-variant">(124 reviews)</span>
+</div>
+<div class="mt-auto flex items-center justify-between">
+<div>
+<span class="font-headline-md text-primary">$12.50</span>
+<span class="text-on-surface-variant line-through text-sm ml-xs">$14.99</span>
+</div>
+<div class="bg-secondary-container px-base py-xs rounded text-on-secondary-container font-label-sm">Best Seller</div>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col reveal active" style="transition-delay: 100ms">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Professional grade balanced liquid fertilizer in a sleek industrial bottle with a measuring cap. The bottle is placed on a stone surface with soft green leaves in the blurred background. Bright, natural daylight creates a trustworthy and high-end feel. The label is modern and clean with green and white corporate colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkjQEJFigcPLz3dKf4AQgJCVdciJf6VdVd2MiBxrxpm98IS6qkouaHFPTs3z9nPrd92hzzPwJaHepy1glpqqmvAd6zNWKydkaZw63rl_Qo8dbHVv54iJvo0ymtw1kRcN-D3vtG-nTYz3zsQMcT07Cy5mF_eo0wHL2-ecb7avyjblmStIUuAKnGl0tagTUt5zqn9j41Kv-yZ3EyCKtTdZovgTDQGAgy6K4EfopsTUO49gdJCZxYOqnlYfWXkBzGE1bfG9aAQVOG9xY">
+<div class="absolute bottom-0 left-0 right-0 p-sm translate-y-full group-hover:translate-y-0 transition-transform bg-primary/20 backdrop-blur-sm">
+<button class="w-full bg-primary text-white py-2 rounded-lg font-label-md flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add_shopping_cart">add_shopping_cart</span>
+                                    Quick Add
+                                </button>
+</div>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-tertiary-container text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1">verified</span>
+<span class="font-label-sm text-on-surface-variant">AgriTech Pro</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">Balanced NPK Liquid Fertilizer (1L)</h3>
+<div class="flex items-center gap-xs mb-md">
+<span class="material-symbols-outlined text-[#ffb870] text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="font-label-sm text-on-surface">4.9</span>
+<span class="font-label-sm text-on-surface-variant">(86 reviews)</span>
+</div>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-headline-md text-primary">$24.99</span>
+<span class="bg-secondary-container px-base py-xs rounded text-on-secondary-container font-label-sm">In Stock</span>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col reveal active" style="transition-delay: 200ms">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A set of professional-grade stainless steel gardening tools, including a trowel, fork, and pruning shears, with ergonomic wooden handles. They are laid out neatly on a rustic wooden table with gardening gloves and a burlap bag nearby. Warm evening sunlight streams across the scene, creating long, soft shadows. High-fidelity photography for a premium brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCncbba_rQkhzsmurUI-xo02R5_QTOkOSWUB13QdOUDdhzMlcD1IqW_lqOmTZiGmp_IzqEsd7QEnia7kYA6cG2xfrm2PL1tp21h_E_a1BzlDBgUxkUS3BW7FVrRWB4Q4vlAwZHFHYQcnEBWclmZtupB-dyJfiOeQ2UU5Co13Hr07rdTUa-MXwpMVHyI0TNIayvd3-OgigyXAg7SBGRxxTFtkiUWsiXfulBXYAXollayrP1a4D1nYNbs0-nbElUG8W3URk5wVVc6Bi4">
+<div class="absolute bottom-0 left-0 right-0 p-sm translate-y-full group-hover:translate-y-0 transition-transform bg-primary/20 backdrop-blur-sm">
+<button class="w-full bg-primary text-white py-2 rounded-lg font-label-md flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add_shopping_cart">add_shopping_cart</span>
+                                    Quick Add
+                                </button>
+</div>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-tertiary-container text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1">verified</span>
+<span class="font-label-sm text-on-surface-variant">IronRoot Tools</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">Ergonomic Stainless Steel Tool Set</h3>
+<div class="flex items-center gap-xs mb-md">
+<span class="material-symbols-outlined text-[#ffb870] text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="font-label-sm text-on-surface">4.7</span>
+<span class="font-label-sm text-on-surface-variant">(310 reviews)</span>
+</div>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-headline-md text-primary">$59.00</span>
+<div class="bg-secondary-container px-base py-xs rounded text-on-secondary-container font-label-sm">Heavy Duty</div>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col reveal active" style="transition-delay: 300ms">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A small, healthy potted lavender plant in a biodegradable pot, ready for transplanting. The plant is showcased in a bright, airy garden shop setting with soft bokeh of other plants in the background. The lighting is clean and professional, emphasizing the freshness of the plant. A small 'Eco-Friendly' tag is attached to the pot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyy8CoBx_Ly-2ZaTCy0vRdn4btP9hQoVs8O2gjZ3gzBaR-PrMbMABUQ9bz-D2VNatCAoLdSwW2kr1WfozjvtkpqDSUE2bNYj-MLhsuVtkeJdfVdMzJ4j26oumD-0ZV0KSHcu1UWUMXfnZYLBdpzmM0Fyp1J7rDlGeAeaqGB-L44lp4rfiX4MBwdXkes4j_-ITxjOgc8V9RiA7SPnVRK6BvWDxpCqJbnI549y0uomUQlj1x83w-YGdFplVRsr4uGivbkUaw6IaSrAQ">
+<div class="absolute bottom-0 left-0 right-0 p-sm translate-y-full group-hover:translate-y-0 transition-transform bg-primary/20 backdrop-blur-sm">
+<button class="w-full bg-primary text-white py-2 rounded-lg font-label-md flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add_shopping_cart">add_shopping_cart</span>
+                                    Quick Add
+                                </button>
+</div>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-tertiary-container text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1">verified</span>
+<span class="font-label-sm text-on-surface-variant">Bloom Nursery</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">English Lavender Nursery Starter</h3>
+<div class="flex items-center gap-xs mb-md">
+<span class="material-symbols-outlined text-[#ffb870] text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="font-label-sm text-on-surface">5.0</span>
+<span class="font-label-sm text-on-surface-variant">(45 reviews)</span>
+</div>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-headline-md text-primary">$18.25</span>
+<div class="bg-primary-fixed text-on-primary-fixed-variant px-base py-xs rounded font-label-sm">Eco-Pack</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Home Gardener Special (Glassmorphism Section) -->
+<section class="py-xl px-margin-desktop relative overflow-hidden">
+<div class="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="absolute bottom-0 left-0 -ml-32 -mb-32 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"></div>
+<div class="max-w-7xl mx-auto">
+<div class="grid lg:grid-cols-2 gap-xl items-center">
+<div class="reveal active">
+<span class="bg-secondary-container text-on-secondary-container px-md py-xs rounded-full font-label-sm mb-md inline-block">Curated for You</span>
+<h2 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-primary mb-md">Home Gardener Special</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-lg">
+                            We believe everyone can grow. Discover our exclusive range of small-quantity packs, DIY herb kits, and balcony-friendly tools designed specifically for the urban gardener.
+                        </p>
+<div class="grid md:grid-cols-2 gap-md">
+<div class="glass-card p-md rounded-xl flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="inventory_2">inventory_2</span>
+<div>
+<h4 class="font-title-lg text-on-surface">Small-Quantity Packs</h4>
+<p class="font-label-sm text-on-surface-variant">Perfect for balcony containers and small plots.</p>
+</div>
+</div>
+<div class="glass-card p-md rounded-xl flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="card_membership">card_membership</span>
+<div>
+<h4 class="font-title-lg text-on-surface">DIY Starter Kits</h4>
+<p class="font-label-sm text-on-surface-variant">Everything you need for your first harvest.</p>
+</div>
+</div>
+</div>
+<button class="mt-lg bg-primary text-white px-xl py-4 rounded-lg font-bold hover:scale-95 transition-transform flex items-center gap-sm">
+                            Explore Home Range
+                            <span class="material-symbols-outlined" data-icon="trending_flat">trending_flat</span>
+</button>
+</div>
+<div class="relative reveal active" style="transition-delay: 200ms">
+<div class="aspect-square rounded-3xl overflow-hidden shadow-2xl relative">
+<img class="w-full h-full object-cover" data-alt="A beautiful, organized wooden garden box on a modern balcony filled with vibrant green herbs like basil, mint, and rosemary. Beside the box is a stylish, minimalist glass watering can and a small bag of premium organic soil. The setting is bright and sunny, evoking a peaceful urban gardening lifestyle with high-end aesthetic details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHlETcK1ON_Q9mnY98IvvjSzwCasjrRDtTLpEN4mhiKIV7lhLR6gpSYJ4TWsJuEqQiCQ28G1N1ijfP5oq_Bch7onEI58RU2_xv748zSnf6Ypqs-nnK2bU22Q2bnYnVLE6CG6TUTdR8kMaX1SwWsWOHyCXo00auZnuvsYLEnaaCMn2BYHvMJuscJ5_4B3UALoNMtajC14YJkmJJq05WaVK4gYksr2fhfo7NdqIIKFhmKRwKmgVaEHtnKVnfbEUtQPrxKvvf80s_g3A">
+<!-- Overlay Floaties -->
+<div class="absolute top-md left-md glass-card p-sm rounded-lg flex items-center gap-sm animate-float">
+<div class="bg-primary-fixed p-xs rounded">
+<span class="material-symbols-outlined text-primary" data-icon="spa" style="font-variation-settings: 'FILL' 1">spa</span>
+</div>
+<span class="font-label-sm font-bold text-primary">Organic Certification</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why Choose Us -->
+<section class="py-xl px-margin-desktop bg-surface-container-highest">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-xl reveal active">
+<h2 class="font-headline-lg text-headline-lg mb-sm">Why Choose AgriMarket Connect</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto">Building trust in every seed and tool we deliver.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center text-center reveal active">
+<div class="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="verified_user">verified_user</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">Verified Sellers</h3>
+<p class="font-body-md text-on-surface-variant">Every vendor undergoes a strict multi-point verification process for quality assurance.</p>
+</div>
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center text-center reveal active" style="transition-delay: 100ms">
+<div class="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="lock">lock</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">Secure Payments</h3>
+<p class="font-body-md text-on-surface-variant">Enterprise-grade encryption protecting every transaction you make on our platform.</p>
+</div>
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center text-center reveal active" style="transition-delay: 200ms">
+<div class="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="local_shipping">local_shipping</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">Fast Delivery</h3>
+<p class="font-body-md text-on-surface-variant">Regional hub system ensures your agricultural supplies arrive fresh and on time.</p>
+</div>
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center text-center reveal active" style="transition-delay: 300ms">
+<div class="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="support_agent">support_agent</span>
+</div>
+<h3 class="font-title-lg text-on-surface mb-sm">Expert Support</h3>
+<p class="font-body-md text-on-surface-variant">Need advice on what to buy? Our agricultural experts are just a chat away.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface font-body-md text-body-md border-t border-outline-variant full-width">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-xl max-w-7xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<span class="font-headline-lg text-headline-lg text-primary block mb-md">AgriMarket Connect</span>
+<p class="text-on-surface-variant mb-lg">Cultivating growth through technology. Connecting the heart of farming with the pulse of modern retail.</p>
+<div class="flex gap-md">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="facebook">face_nod</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="info">info</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="alternate_email">alternate_email</span>
+</div>
+</div>
+<div>
+<h4 class="font-title-lg text-on-surface mb-md">Quick Links</h4>
+<ul class="space-y-sm text-on-surface-variant">
+<li class=""><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Seller Hub</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Sustainability</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-title-lg text-on-surface mb-md">Legal &amp; Support</h4>
+<ul class="space-y-sm text-on-surface-variant">
+<li class=""><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Contact Support</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Refund Policy</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-title-lg text-on-surface mb-md">Newsletter</h4>
+<p class="font-label-sm text-on-surface-variant mb-md">Join our mailing list for weekly gardening tips and exclusive vendor deals.</p>
+<div class="flex flex-col gap-sm">
+<input class="bg-white border border-outline px-md py-2 rounded-lg focus:outline-none focus:border-primary" placeholder="Enter your email" type="email">
+<button class="bg-primary text-on-primary py-2 rounded-lg font-bold">Subscribe</button>
+</div>
+</div>
+</div>
+<div class="px-margin-desktop py-md border-t border-outline-variant/30 text-center text-on-surface-variant font-label-sm">
+            © 2024 AgriMarket Connect. Cultivating growth through technology. All rights reserved.
+        </div>
+</footer>
+<script>
+        // Simple Intersection Observer for reveal animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
+
+</body></html>

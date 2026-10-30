@@ -1,0 +1,531 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgriMarket Connect | Premium Seeds &amp; Tools</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#a3f69c",
+                        "on-secondary-container": "#00731e",
+                        "tertiary-container": "#a05e00",
+                        "background": "#fcf9f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#cbffc2",
+                        "on-surface-variant": "#40493d",
+                        "surface-variant": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#005313",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#005312",
+                        "secondary": "#006e1c",
+                        "primary-fixed-dim": "#88d982",
+                        "outline": "#707a6c",
+                        "surface-tint": "#1b6d24",
+                        "surface": "#fcf9f8",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffeee2",
+                        "tertiary-fixed": "#ffdcbe",
+                        "secondary-fixed": "#94f990",
+                        "on-error": "#ffffff",
+                        "primary": "#0d631b",
+                        "inverse-primary": "#88d982",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#2e7d32",
+                        "on-background": "#1b1c1c",
+                        "surface-dim": "#dcd9d9",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#7e4900",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-secondary-fixed": "#002204",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#002204",
+                        "secondary-container": "#91f78e",
+                        "outline-variant": "#bfcaba"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "48px",
+                        "xl": "80px",
+                        "xs": "4px",
+                        "gutter": "24px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "base": "8px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .zoom-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .zoom-image {
+            transition: transform 0.5s ease;
+            cursor: zoom-in;
+        }
+        .zoom-image:hover {
+            transform: scale(1.5);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Bar -->
+<header class="glass-nav bg-surface/80 dark:bg-surface-container/80 font-title-lg text-title-lg docked full-width top-0 sticky z-50 shadow-sm transition-all duration-300">
+<div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<a class="font-headline-md text-headline-md font-black text-primary dark:text-primary-fixed" href="#">ExVeg</a>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 transition-colors duration-200" href="#">Marketplace</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors duration-200" href="#">Nursery</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors duration-200" href="#">Tools</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors duration-200" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant/30">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-md w-64" placeholder="Search agricultural products..." type="text">
+</div>
+<button class="material-symbols-outlined p-2 hover:bg-surface-container rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined p-2 hover:bg-surface-container rounded-full transition-colors">shopping_cart</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md hover:shadow-md active:scale-95 transition-all">Register</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-label-sm text-on-surface-variant mb-base">
+<a class="hover:text-primary" href="#">Marketplace</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary" href="#">Seeds &amp; Starters</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Heirloom Organic Tomato Collection</span>
+</nav>
+<!-- Product Hero Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Left: High-fidelity Gallery -->
+<div class="lg:col-span-7 flex flex-col md:flex-row gap-gutter">
+<!-- Thumbnails -->
+<div class="order-2 md:order-1 flex md:flex-col gap-sm overflow-x-auto md:overflow-y-auto hide-scrollbar max-h-[600px]">
+<button class="w-20 h-20 flex-shrink-0 rounded-lg border-2 border-primary overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A professional high-resolution macro photograph of vibrant red heirloom tomatoes still on the vine with water droplets, captured in bright natural greenhouse lighting. The scene highlights the lush green leaves and deep red textures of the organic fruit, set against a clean, modern agricultural backdrop with soft focus depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgq3VL8niqIL6zs-Fbz176PHjxvwZI90uDmVGxoNIKwxZxQvNUOFkWpbus-gp4DaNns8kp78ePMEXze9dahtUTbEFu_JhBmEHqJ-_hZhBmmhQ29lL8EWT3NyvcyczZKrhgC2XOUxNBHNCvk6K27lrXv2c-Z94RRir2N4BnoFHccGwY0YF1fYXjTCG291U7auVS_WJ0xWlpI920XHRhhqLbRPwkkEnoHHZ2XmbFMp9xTWfJ4m_HN4ydEduHuO9BuF6X6D88iT1f50g">
+</button>
+<button class="w-20 h-20 flex-shrink-0 rounded-lg border border-outline-variant overflow-hidden hover:border-primary transition-colors">
+<img class="w-full h-full object-cover" data-alt="A close-up shot of organic tomato seeds being sorted on a wooden rustic surface by a pair of gardening gloves. The lighting is warm and golden, emphasizing a sustainable and traditional farming aesthetic. The overall mood is authentic, earthy, and highly detailed, showcasing the premium quality of the agricultural product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD40_5xSa1eqZB29RiYf-101KB3adEjZTNXc1Do4ku-W9p0c33MnKhyZjE1bgAhCI3dflkdyTX-_ju0qnr2mxV4gBLqziqscsVx2WweqGCqjSQ7NbZiBMm_vedRhh6hO3nT5KpfM1CgIXQjtSU12Q72XbbvDa87alDktc4maQ8hQyslsI6RQzwrQFZJvYEiCE2_I_bX_nbbFOHET5fYf0YfCTSSX8B8ee2svhTp00QQdN43aFcJ-km6MR91KbAXN73tpDV9MRkUZPs">
+</button>
+<button class="w-20 h-20 flex-shrink-0 rounded-lg border border-outline-variant overflow-hidden hover:border-primary transition-colors">
+<img class="w-full h-full object-cover" data-alt="A collection of diverse heirloom tomato varieties in various colors like orange, yellow, and purple, arranged artistically in a woven basket. The shot is taken from a top-down perspective with bright, clean daylight that reflects a fresh, market-ready quality. The image uses a vibrant, natural color palette consistent with high-end organic farming." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBh9K-gBl4iJq77o8F8Btmqh1nAj7L8CvGPKRnAaDxsMxcR0tQfe7jdJebiT1vbuc36QhQPBORFDUp6l4Kw13QqOrQtAymUDhxNUcFlFom0pJARBkQGNqs7jKXxpq2CJo9YMTBGpx2IuKr8vZVQeb4kCQv0xAaXi27fjWH3kBiK9tZbbCID3PZTNXFXu4FZxT8QqUGJYG6RiKgY1aCNI6OttiZ_FFtv16KYxcA3X06Mnyi9g7qFR4vc44Z88BjCibKqYZm4EyWLGkY">
+</button>
+<button class="w-20 h-20 flex-shrink-0 rounded-lg border border-outline-variant overflow-hidden hover:border-primary transition-colors">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a single healthy tomato sprout emerging from rich dark soil in a modern black nursery tray. The lighting is crisp and highlights the delicate green textures of the new growth against the dark, textured earth. The scene conveys technological advancement and careful cultivation in a professional greenhouse setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAobA7dt0wBh3F8k7DHdqzRSnmQbzAPQ7xfo7oV7-ZnRMOlDmtmvnEM4QgwSS7c893-OmXB88DNRAiTfAcYwQriuYgWH6skbPJTiiMKIe8QQyAQ8ree0nVFypnlGnjRAXFmrCiafs15TdVZf28_25qMPr0SrLB0tr5Qxc4jyRr7GWoKGCmOP3uo1kLgvWMv6sdLoi9MYAwSHP1EjzRaMpA7RweWxq4qTUtIa245A6ZzPQeVeKMb5N5qtHKtlNU6nFS7nvdzW_9cap4">
+</button>
+</div>
+<!-- Main Preview -->
+<div class="order-1 md:order-2 flex-grow bg-white rounded-xl border border-outline-variant/30 overflow-hidden shadow-sm zoom-container">
+<img class="w-full h-full object-cover zoom-image" data-alt="A professional high-resolution macro photograph of vibrant red heirloom tomatoes still on the vine with water droplets, captured in bright natural greenhouse lighting. The scene highlights the lush green leaves and deep red textures of the organic fruit, set against a clean, modern agricultural backdrop with soft focus depth of field." id="main-preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS3afc14dhSApqmICvVBUBqY1Jf35sO8nVqN9nTsVv_fFSnQV19XlnDgDeW1NFsSppyRGUIG6RDEgz4peV_A4PirctFV2qOPIRIRzcRYk283b8HnZfpyO6ZRgZUVR7VQ0VlmgBMrkI6XC1CW8hiZHcC9smtrZZGfhGB00ZUBdqU7GXtV9mXXeAqDRsYxhCQE0EAmg6TJAQD-K4A0Jr6TQgH87r5UU5-0I8jO6Ggwp7VpgXYHLXidqfIWhIsWphuZT3HfxJnkTxm_4">
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-secondary text-white text-label-sm px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Verified Product
+                        </span>
+<span class="bg-tertiary text-white text-label-sm px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+                            Home Gardener Friendly
+                        </span>
+</div>
+</div>
+</div>
+<!-- Right: Product Info & Actions -->
+<div class="lg:col-span-5 flex flex-col">
+<div class="mb-gutter">
+<h1 class="font-headline-lg text-headline-lg mb-2 text-on-surface">Heirloom Organic Tomato Collection</h1>
+<div class="flex items-center gap-4 mb-4">
+<div class="flex items-center text-[#FFA000]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0.5;">star</span>
+<span class="text-on-surface ml-2 font-semibold">4.8</span>
+</div>
+<span class="text-on-surface-variant text-label-md">(142 Reviews)</span>
+<span class="text-primary font-bold text-label-md">Verified Seller</span>
+</div>
+<div class="flex items-end gap-3 mb-6">
+<span class="text-4xl font-bold text-on-surface">$24.99</span>
+<span class="text-xl text-on-surface-variant line-through mb-1">$32.00</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-lg text-label-sm font-bold mb-1">22% OFF</span>
+</div>
+<p class="text-on-surface-variant text-body-md mb-gutter leading-relaxed">
+                        Experience the superior flavor of traditional organic gardening. Our Heirloom Collection features a curated mix of five rare varieties, each selected for its robustness, yield, and exceptional culinary profile. Perfect for professional growers and hobbyist gardeners alike.
+                    </p>
+<div class="flex items-center gap-2 mb-gutter">
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+<span class="text-label-md font-semibold text-secondary">In Stock</span>
+<span class="text-on-surface-variant text-label-sm">— Ships within 24 hours</span>
+</div>
+</div>
+<!-- Product Controls -->
+<div class="space-y-gutter">
+<div class="flex items-center gap-gutter">
+<div class="flex items-center border border-outline rounded-lg overflow-hidden">
+<button class="p-3 hover:bg-surface-container transition-colors" onclick="decrement()">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<input class="w-16 text-center border-none focus:ring-0 font-bold bg-transparent" id="qty" readonly="" type="number" value="1">
+<button class="p-3 hover:bg-surface-container transition-colors" onclick="increment()">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<button class="flex-grow flex items-center justify-center gap-2 bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed-dim transition-all py-4 rounded-xl font-bold">
+<span class="material-symbols-outlined">shopping_cart</span>
+                            Add to Cart
+                        </button>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:shadow-lg active:scale-[0.98] transition-all">
+                        Buy Now
+                    </button>
+</div>
+<!-- Seller Info Card -->
+<div class="mt-xl p-6 bg-surface-container-low rounded-2xl border border-outline-variant">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-primary-fixed rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">agriculture</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg">GreenLeaf Nurseries</h3>
+<p class="text-label-sm text-on-surface-variant">Top Tier Seller since 2019</p>
+</div>
+</div>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase px-2 py-1 rounded tracking-widest">Elite</span>
+</div>
+<div class="grid grid-cols-3 gap-2 mb-4">
+<div class="text-center p-2 rounded-lg bg-surface">
+<p class="text-label-sm text-on-surface-variant">Rating</p>
+<p class="font-bold text-primary">4.9/5</p>
+</div>
+<div class="text-center p-2 rounded-lg bg-surface">
+<p class="text-label-sm text-on-surface-variant">Response</p>
+<p class="font-bold text-primary">98%</p>
+</div>
+<div class="text-center p-2 rounded-lg bg-surface">
+<p class="text-label-sm text-on-surface-variant">Delivery</p>
+<p class="font-bold text-primary">Fast</p>
+</div>
+</div>
+<button class="w-full border border-primary text-primary py-2 rounded-lg font-label-md hover:bg-primary-fixed/20 transition-all">Visit Store</button>
+</div>
+</div>
+</div>
+<!-- Details Tabs -->
+<div class="mt-xl border-t border-outline-variant pt-xl">
+<div class="flex gap-xl border-b border-outline-variant mb-gutter overflow-x-auto hide-scrollbar">
+<button class="pb-4 border-b-2 border-primary font-bold text-primary">Description</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-all">Planting Guide</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-all">Logistics</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-all">Reviews (142)</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+<div>
+<h3 class="font-headline-md text-headline-md mb-4">Comprehensive Specifications</h3>
+<ul class="space-y-4">
+<li class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant">Seed Count</span>
+<span class="font-semibold">~250 per packet</span>
+</li>
+<li class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant">Germination Rate</span>
+<span class="font-semibold">92% Guaranteed</span>
+</li>
+<li class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant">Maturity</span>
+<span class="font-semibold">75-85 Days</span>
+</li>
+<li class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant">Soil Type</span>
+<span class="font-semibold">Loamy, Well-drained</span>
+</li>
+</ul>
+</div>
+<div class="bg-primary-container/10 p-6 rounded-2xl border border-primary/20">
+<h3 class="font-headline-md text-headline-md mb-4 text-primary">Pro Tip for Growers</h3>
+<p class="text-body-md text-on-surface-variant mb-4 italic">
+                        "For the highest yields, start seeds indoors 6-8 weeks before the last frost. Use a high-quality starting mix and maintain a temperature of 70-80°F for optimal germination."
+                    </p>
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined">lightbulb</span>
+<span class="font-bold">AgriExpert Recommendation</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Reviews -->
+<section class="mt-xl">
+<h2 class="font-headline-lg text-headline-lg mb-gutter">Recent Reviews</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex items-center gap-1 text-[#FFA000] mb-2">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-bold text-on-surface mb-2">Excellent Germination</p>
+<p class="text-body-md text-on-surface-variant mb-4">"Planted these three weeks ago and almost every single seed sprouted. Very impressed with the quality."</p>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-[12px] font-bold">SM</div>
+<span class="text-label-sm font-semibold">Samuel M.</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex items-center gap-1 text-[#FFA000] mb-2">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<p class="font-bold text-on-surface mb-2">Great for Small Gardens</p>
+<p class="text-body-md text-on-surface-variant mb-4">"The varieties are well-picked for urban balconies. I'm already seeing the first tiny fruits."</p>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed-dim flex items-center justify-center text-[12px] font-bold">AL</div>
+<span class="text-label-sm font-semibold">Anna L.</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex items-center gap-1 text-[#FFA000] mb-2">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-bold text-on-surface mb-2">Pure Professionalism</p>
+<p class="text-body-md text-on-surface-variant mb-4">"GreenLeaf never disappoints. The packaging was eco-friendly and kept the seeds fresh during transit."</p>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-[12px] font-bold">JK</div>
+<span class="text-label-sm font-semibold">James K.</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+</div>
+<button class="mt-gutter text-primary font-bold hover:underline flex items-center gap-1">View all 142 reviews <span class="material-symbols-outlined">arrow_forward</span></button>
+</section>
+<!-- Related Products -->
+<section class="mt-xl">
+<div class="flex items-center justify-between mb-gutter">
+<h2 class="font-headline-lg text-headline-lg">Related Products</h2>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<!-- Related 1 -->
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden mb-3 aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A detailed product shot of organic bell pepper seeds displayed next to a fresh, glossy green bell pepper on a minimalist white surface. The lighting is clean and commercial, highlighting the texture of both the seeds and the vegetable. The scene is bright and professional, representing high-quality agricultural supplies." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI6aT3LZIlleJEiahGhm5fviwa0vfFxuZ0bWRuMAlcdzWoRNDM8UdtzqbM_Dcfl_f1NihwfnTNRtQ0zZnsf0O-y1R3AtNkZVWaEsIwd8pTtxD-zGW9xXhx7ChbQhz2M-OeVQ-Vk4lIOkFYY3hcTfkn9uSb21fEeGOio_yimXrSFAm2atqRbOPMpeM-Ky7gzTrOsNlAZSUOcQtu8rDEiMx48q1c06wP0_ER3-d9EMNbew90ov34LMRQihxf8_Ee6GwtBzXv7fhhhOc">
+<div class="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors"></div>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 shadow-lg">
+<span class="material-symbols-outlined text-primary">add_shopping_cart</span>
+</button>
+</div>
+<h4 class="font-title-lg text-on-surface group-hover:text-primary transition-colors">Organic Bell Pepper Mix</h4>
+<p class="text-primary font-bold">$18.50</p>
+</div>
+<!-- Related 2 -->
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden mb-3 aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A collection of vibrant culinary herbs like basil, thyme, and rosemary growing in modern, white ceramic pots on a sunny kitchen windowsill. The light is soft and warm, casting gentle shadows and emphasizing the fresh green leaves. The overall style is clean, modern, and inviting, showcasing home gardening success." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARn_ZoDzBT82Yse5I1kqZ4GC3zgnC0nS-ndKRxhJ17hdFVyCedAiu4As1uad8EvK2Isr8mUryKy_8Qe4AUUJ8ZExFWDShaRiJjJeNH-icyHy5Q5eGKk2cN8bUh6SOvahxbrh76gpmLoV-KMgAJXVWIx_x0fVjqlPPdMMaHL6_dshRw-KboDo4ixUYkmW_eSFTuLhrFHryLXffniw8WhMzGZs8UaVCEvJistn94g1dPf_-8J8g6O-5hT7mk0uzortjXcGRD3fhINX8">
+<div class="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors"></div>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 shadow-lg">
+<span class="material-symbols-outlined text-primary">add_shopping_cart</span>
+</button>
+</div>
+<h4 class="font-title-lg text-on-surface group-hover:text-primary transition-colors">Culinary Herb Garden Kit</h4>
+<p class="text-primary font-bold">$34.00</p>
+</div>
+<!-- Related 3 -->
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden mb-3 aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A professional set of high-quality stainless steel gardening hand tools with ergonomic wooden handles, laid out on a clean light gray background. The lighting is bright and even, highlighting the metallic sheen and fine wood grain. The style is premium B2B SaaS aesthetic, emphasizing durability and high-end manufacturing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6T1tDfeXDgMEUGREvbC9fUUTx9xfQ_jXFZLU9_VeHFgz3-JeSQ9ya1G_JbpthCX17jn0UBYod0KSXR7uO1Jt9ZCcbzrmq4pP90DfvDk6YnLlcnQl-J0pgaJFTt8DkuFvLQQ0DCzSRmfhVvDUMOm1eEZOBe3F0YSxTT-jdJ9SM2jpZxPD9k3R-C6u-E4nSCRCxkFLLCSiZb7c9FNOPv_jVe4LilqkGRNIYsnyj_mae_BuMTcTAFHmw7eqgux4mV82yZjRX2Acp9bM">
+<div class="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors"></div>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 shadow-lg">
+<span class="material-symbols-outlined text-primary">add_shopping_cart</span>
+</button>
+</div>
+<h4 class="font-title-lg text-on-surface group-hover:text-primary transition-colors">Professional Tool Set</h4>
+<p class="text-primary font-bold">$89.00</p>
+</div>
+<!-- Related 4 -->
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden mb-3 aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A macro photograph of rich, dark organic compost soil being held in two cupped hands. The detail of the soil particles and moisture is high, set against a blurred background of a sunny vegetable garden. The image evokes a sense of earthiness, growth, and sustainable agricultural practices with natural, vibrant lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7S7gMT1TiYsOZxsqN5z_lBSQNBXW26rQ5NZ1gOaBEHzeeG-WDKoVdiEJfB8Yq-XEHeNft6q0RtRSCixHQvLARuwhHbFdJLiOcXW5pbkuLe2okeQGYnLOa_acP9LLNrenzt8Kxtr7I5rRi_9BfN7WDJasv4hUmFMX3TDAv_Q2MvPI2qEpy_ko8cZVBJy1r0Eo077PnjUNvo0djKcreUF0k_6Bl09eGR_adrpKSqOpUrA6PeNUKyeJQ8jkxMN87SbVe4rlFFF0TQsA">
+<div class="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors"></div>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 shadow-lg">
+<span class="material-symbols-outlined text-primary">add_shopping_cart</span>
+</button>
+</div>
+<h4 class="font-title-lg text-on-surface group-hover:text-primary transition-colors">Premium Potting Soil</h4>
+<p class="text-primary font-bold">$12.99</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface full-width border-t border-outline-variant mt-xl">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-xl max-w-7xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">AgriMarket Connect</h2>
+<p class="text-on-surface-variant dark:text-outline-variant mb-6">Cultivating growth through technology. Connecting farmers and buyers globally.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 bg-surface rounded-full flex items-center justify-center hover:bg-primary-fixed transition-colors" href="#">
+<span class="material-symbols-outlined text-primary">public</span>
+</a>
+<a class="w-10 h-10 bg-surface rounded-full flex items-center justify-center hover:bg-primary-fixed transition-colors" href="#">
+<span class="material-symbols-outlined text-primary">mail</span>
+</a>
+<a class="w-10 h-10 bg-surface rounded-full flex items-center justify-center hover:bg-primary-fixed transition-colors" href="#">
+<span class="material-symbols-outlined text-primary">phone</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-4">Marketplace</h4>
+<ul class="space-y-2 text-on-surface-variant dark:text-outline-variant">
+<li class=""><a class="hover:text-primary transition-colors" href="#">All Products</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Bulk Purchasing</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">New Arrivals</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Special Offers</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">Seller Hub</h4>
+<ul class="space-y-2 text-on-surface-variant dark:text-outline-variant">
+<li class=""><a class="hover:text-primary transition-colors" href="#">Become a Vendor</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Seller Dashboard</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Analytics Guide</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Logistics Partners</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">Support</h4>
+<ul class="space-y-2 text-on-surface-variant dark:text-outline-variant">
+<li class=""><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Sustainability</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 py-8 px-margin-desktop text-center text-label-sm text-on-surface-variant">
+            © 2024 AgriMarket Connect. Cultivating growth through technology.
+        </div>
+</footer>
+<script>
+        function increment() {
+            const input = document.getElementById('qty');
+            input.value = parseInt(input.value) + 1;
+        }
+        function decrement() {
+            const input = document.getElementById('qty');
+            if(parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Simple thumbnail switcher
+        document.querySelectorAll('.flex-shrink-0 button').forEach(button => {
+            button.addEventListener('click', () => {
+                const newSrc = button.querySelector('img').src;
+                const newAlt = button.querySelector('img').dataset.alt;
+                const mainImg = document.getElementById('main-preview');
+                mainImg.src = newSrc;
+                mainImg.dataset.alt = newAlt;
+                
+                // Update active border
+                document.querySelectorAll('.flex-shrink-0 button').forEach(b => {
+                    b.classList.remove('border-primary');
+                    b.classList.add('border-outline-variant');
+                });
+                button.classList.add('border-primary');
+                button.classList.remove('border-outline-variant');
+            });
+        });
+    </script>
+
+
+</body></html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Product Verification | AgriMarket Connect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#a05e00",
+                        "on-secondary-container": "#00731e",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#cbffc2",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1b1c1c",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary-fixed-dim": "#78dc77",
+                        "primary-container": "#2e7d32",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed": "#94f990",
+                        "background": "#fcf9f8",
+                        "tertiary": "#7e4900",
+                        "on-tertiary-fixed": "#2c1600",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#bfcaba",
+                        "inverse-on-surface": "#f3f0ef",
+                        "secondary": "#006e1c",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#1b6d24",
+                        "inverse-primary": "#88d982",
+                        "on-primary-fixed": "#002204",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "primary-fixed": "#a3f69c",
+                        "tertiary-fixed": "#ffdcbe",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#91f78e",
+                        "primary": "#0d631b",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "surface-bright": "#fcf9f8",
+                        "surface": "#fcf9f8",
+                        "surface-container-low": "#f6f3f2",
+                        "primary-fixed-dim": "#88d982",
+                        "on-tertiary-container": "#ffeee2",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "outline": "#707a6c",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-primary-fixed-variant": "#005312",
+                        "on-surface-variant": "#40493d",
+                        "on-secondary-fixed": "#002204",
+                        "inverse-surface": "#303030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "sm": "12px",
+                        "margin-desktop": "64px",
+                        "lg": "48px",
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "xl": "80px",
+                        "xs": "4px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-nav {
+            background: rgba(252, 249, 248, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #bfcaba;
+            border-radius: 10px;
+        }
+        .active-ring {
+            box-shadow: 0 0 0 2px #0d631b;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full z-40 h-screen w-64 border-r border-outline-variant bg-surface dark:bg-inverse-surface shadow-sm transition-all duration-300">
+<div class="p-6">
+<h1 class="text-title-lg font-headline-md font-bold text-primary dark:text-inverse-primary"><span style="font-size: 24px; background-color: rgba(255, 255, 255, 0.8);">ExVeg</span></h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Admin Console</p>
+</div>
+<nav class="mt-4 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">storefront</span>
+<span class="font-label-md text-label-md">Sellers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">shopping_cart</span>
+<span class="font-label-md text-label-md">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">bar_chart</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 flex justify-between items-center px-8 z-30 glass-nav border-b border-outline-variant">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full font-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search new products..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-full relative transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">help</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">apps</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="font-label-md text-on-surface font-bold">Admin User</p>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant">Senior Auditor</p>
+</div>
+<img alt="Administrator Avatar" class="w-10 h-10 rounded-full border border-outline-variant object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKbE3LZ0fQ6_t3MRaF-O-ZandWi1Ac_oqWPFt7Ql5nYncq4DuKmUOjNNT1kIf3ma1v1nUB5pbpD-3Cr-d16CygTZ7CntmvtlndAARw_qQlQ_GVpgRAf-XCil7_UrPvvcgM9ope1Xy4LUjZzbTrjisNtDK_cbseblUxoc8BQLWp0_3w0IOdcY-LdJnQowXJ_o8931VBp9pPV3QwM1AS6DQI4BHruGF1jb29qjy-zb4PifAO9MSTV5E0yW7XbtC68hZK1UPaSNsnVSI">
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pl-64 pt-16 min-h-screen">
+<div class="p-margin-desktop grid grid-cols-12 gap-gutter h-[calc(100vh-64px)] overflow-hidden">
+<!-- Left Side: Product Queue -->
+<div class="col-span-12 lg:col-span-5 xl:col-span-4 flex flex-col h-full">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary">Verification Queue</h2>
+<p class="font-label-md text-on-surface-variant">14 items pending review</p>
+</div>
+<button class="flex items-center gap-2 px-3 py-1.5 border border-outline text-on-surface-variant rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="font-label-sm text-label-sm">Filters</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2">
+<!-- Product Item 1 (Selected) -->
+<div class="bg-surface border-2 border-primary p-4 rounded-xl shadow-sm cursor-pointer relative transition-all active:scale-[0.98]">
+<div class="flex gap-4">
+<img class="w-20 h-20 rounded-lg object-cover shadow-sm" data-alt="Close-up shot of organic high-grade compost in a biodegradable burlap sack, set against a bright, modern agricultural warehouse background. The lighting is soft and professional, highlighting the rich texture of the soil. The overall aesthetic is clean, sustainable, and premium, using earthy greens and crisp whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaQ4_8dGetcEPUaThpyBRrN_A1Vg977B4KEYNX7gH728oKDjP5S_GoyWfbM37rNiDQqdkel2_M83zPOAVqPRaCZCiPQZ1DPySUeLOf7Fo9KH0IfHkn_FMdU5Ugo4sl9rsn3-zLaThjTPXCU-1DZpF_I3aEk8dJrhv1fj5a7yifFkG0mOXvNuADsOPowC5N0GGaBNeAQN309sntYNL5Dh8qtNjdC46PqKxClAXk9UrBHibol5nYv60ScxbBOeuzL2dK7aNcns0fskU">
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="font-title-lg text-primary truncate">Premium Organic Compost</h3>
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed rounded text-[10px] font-bold uppercase tracking-wide">New</span>
+</div>
+<p class="text-label-md text-on-surface-variant">Fertilizers &amp; Soil</p>
+<div class="mt-2 flex justify-between items-end">
+<div>
+<p class="text-label-sm text-on-surface-variant font-medium">Seller: <span class="text-on-surface">GreenEarth Supplies</span></p>
+<p class="font-title-lg text-primary mt-1">$45.00 <span class="text-label-sm font-normal text-on-surface-variant">/ 25kg</span></p>
+</div>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.8</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Item 2 -->
+<div class="bg-surface border border-outline-variant p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:border-primary/50 transition-all active:scale-[0.98] group">
+<div class="flex gap-4">
+<img class="w-20 h-20 rounded-lg object-cover shadow-sm" data-alt="Handcrafted high-carbon steel trowel with a polished wooden handle, resting on a clean white surface with subtle green leaf accents. High-key lighting emphasizing the quality craftsmanship and sharp edges of the tool. The style is modern, minimalist, and luxury hardware, aligning with a corporate professional agricultural theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8ZBLCTO9xxkljdl45CntAjTT3aeqOR4l1OHc6oBM6JO14za9HjlVkjbM2bcaWVRgSKEKOvWxyaUQ1F3EmKREIks_D1yVb7sj1F0nsPSawhvyQaentfRTsxSLCy6INa5DlVYRxHF8kPfdUTIyWre8qhlIcb2z-JtyiJMii3ngxFjheQ0NqQzsaCqPFpPyh0nKWjdv3JdsrqAAHvr-ggT3p_kvWsGoxaZGzaHTepnfLD-2zjzUamEmv7_8ql3TbBtIiwizC8WRSM4Q">
+<div class="flex-1 min-w-0">
+<h3 class="font-title-lg text-on-surface truncate group-hover:text-primary transition-colors">Carbon Steel Garden Trowel</h3>
+<p class="text-label-md text-on-surface-variant">Tools &amp; Equipment</p>
+<div class="mt-2 flex justify-between items-end">
+<div>
+<p class="text-label-sm text-on-surface-variant font-medium">Seller: <span class="text-on-surface">AgriTools Pro</span></p>
+<p class="font-title-lg text-primary mt-1">$18.50</p>
+</div>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.9</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Item 3 -->
+<div class="bg-surface border border-outline-variant p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:border-primary/50 transition-all active:scale-[0.98] group">
+<div class="flex gap-4">
+<img class="w-20 h-20 rounded-lg object-cover shadow-sm" data-alt="A macro shot of vibrant heirloom tomato seeds neatly arranged in high-quality glass vials with cork stoppers. Bright, clean laboratory lighting suggesting purity and scientific vetting. Minimalist white background with subtle green reflections to convey growth and vitality. The visual style is premium B2B SaaS agricultural ecommerce." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV6KIlX-q3oGOLPSt61RzNgK2RncmVMdqFjUxqk55YJGUiiIaTuhOKoDDoRhZfoKL9aMRR2Tfi2aGxsyeQdv6W0O_-eJsZ0xDJKqf5VRERuqChpHa1g9KVtUB_CKa6PxjPNqisDYQkATYVpznabRu-rnEup4su_eYOVAwC6v6mbAP05p5o1pMgR7CUDGEnaGKEyK1cfas15s8aoqUv99KiNXTegS5M62W3cFp-TauMG6cat6-tZl2VDxlQvtJbJUp2R4ROxJXg3Us">
+<div class="flex-1 min-w-0">
+<h3 class="font-title-lg text-on-surface truncate group-hover:text-primary transition-colors">Heirloom Tomato Seed Kit</h3>
+<p class="text-label-md text-on-surface-variant">Seeds &amp; Bulbs</p>
+<div class="mt-2 flex justify-between items-end">
+<div>
+<p class="text-label-sm text-on-surface-variant font-medium">Seller: <span class="text-on-surface">Heritage Flora</span></p>
+<p class="font-title-lg text-primary mt-1">$12.99</p>
+</div>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">5.0</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Item 4 -->
+<div class="bg-surface border border-outline-variant p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:border-primary/50 transition-all active:scale-[0.98] group">
+<div class="flex gap-4">
+<img class="w-20 h-20 rounded-lg object-cover shadow-sm" data-alt="Professional grade drip irrigation system components displayed on a clean drafting table. The scene includes precise nozzles and tubing with technical blueprints subtly in the background. Bright, high-contrast lighting that conveys engineering excellence and technological advancement in farming. Color palette of technical grays and vibrant primary greens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzGXDZAgY3wpYAIMa5FlVaRdK2DNwcn4wsx88x2VFqrDmkCOBwesb2GA6ptMS5Hsk-fEaUv9tCy5hb_wXuI3qOEkjYYcDAOKgDGic1_lY7qcmi-WBj30DppnSHjmI1gx5UsZQForT01kwueR11eQfKyOkN8g1NA9RUN2fVmzVoBuzprEPo8aQRbI_4lj6t1sS1I-NZWZDv-jN99GZh2x6X6ep0y99tN22pLqKa66wlnUrmieXxNu32_t_HBaHi_n0ShFnML1wNs7s">
+<div class="flex-1 min-w-0">
+<h3 class="font-title-lg text-on-surface truncate group-hover:text-primary transition-colors">Precision Drip Irrigation Hub</h3>
+<p class="text-label-md text-on-surface-variant">Irrigation Systems</p>
+<div class="mt-2 flex justify-between items-end">
+<div>
+<p class="text-label-sm text-on-surface-variant font-medium">Seller: <span class="text-on-surface">AquaFlow Solutions</span></p>
+<p class="font-title-lg text-primary mt-1">$245.00</p>
+</div>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.7</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Detailed Review -->
+<div class="col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col h-full">
+<div class="bg-white border border-outline-variant rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+<!-- Review Header -->
+<div class="p-8 border-b border-outline-variant bg-surface-bright flex justify-between items-start">
+<div class="flex gap-6">
+<div class="relative group">
+<img class="w-32 h-32 rounded-2xl object-cover shadow-md ring-4 ring-white" data-alt="Macro photography of organic compost highlighting its rich, dark nutrient-dense texture. Soft morning sunlight streams across the soil, creating deep shadows and bright highlights. The setting is clean and high-end, suitable for a professional agricultural review interface. Colors are deep browns, vibrant greens, and soft white light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvAEuIvd2mIJOuQRm0oV0H9LW_qJUDC2nEuO0cIr9ksbNVVd6TWHLYEDqxUayMqDD7eVF1EIV8zSgtd0i1JUs33aD7Rph4dpZVmGzitjaJm6zidS8U5xgXV13sFvGwFibDT2xZrroyylLGDrOKUYVaXiZNTa60ApvEWMFsbgnyK01YKJH7AFSfHH2mLBb8mg4hGP3fMkYzGakl1iW3MwLSeL1ro__CbTHSg-d-iG9sSerWbbvJ8glRnNZ7qITIXmpg-ruwJI_KoG0">
+<button class="absolute bottom-1 right-1 bg-primary text-on-primary p-1.5 rounded-lg shadow-lg">
+<span class="material-symbols-outlined text-[18px]">zoom_in</span>
+</button>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-sm">Fertilizers &amp; Soil</span>
+<span class="text-label-sm text-on-surface-variant">• Added 2 hours ago</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Premium Organic Compost (25kg Bag)</h2>
+<div class="flex items-center gap-4 mt-2">
+<div class="flex items-center gap-1.5">
+<img alt="Seller" class="w-6 h-6 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyOszwx6oKioQVVo_3BhtHdOjP1f2pxU8kdTlGO-QMCR_xPcGtBYv32KveJNw-kRsMi8cgprzevg2G-o82wqFwKxH3fBmR1lBNNyY-dy5TpWohf-cLJc3p-Ytw9qVd8PuGqORl971pAlDty_8usbLr0Y6k6tGzwJxiPZFaBS2UmwH5Qho0iATd_MI74CN9Oa3qjL4UF_BsZiSQ5CXNjpqIE4jmpiUg3ttobomtUtmioLTdDMRCJeGUX5WbWH5O3Gtd8tdqta8m4Zw">
+<span class="font-label-md text-on-surface">GreenEarth Supplies</span>
+<span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">4.8</span>
+<span class="text-on-surface-variant text-label-sm">(122 reviews)</span>
+</div>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">$45.00</p>
+<p class="text-label-sm text-on-surface-variant">MSRP: $52.00</p>
+<span class="inline-block mt-2 px-3 py-1 bg-on-secondary-container/10 text-on-secondary-container rounded-lg font-bold text-label-sm">14% Profit Margin</span>
+</div>
+</div>
+<!-- Scrollable Review Content -->
+<div class="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8">
+<!-- Description Section -->
+<section>
+<h3 class="font-title-lg text-on-surface flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">description</span>
+                                Product Description
+                            </h3>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant leading-relaxed text-on-surface-variant">
+<p class="">Our Premium Organic Compost is a triple-screened, nutrient-dense amendment specifically formulated for high-yield sustainable farming. Produced using a proprietary 12-week aerobic decomposition process, it contains a balanced ratio of nitrogen, phosphorus, and potassium, alongside vital trace minerals and beneficial microbial life.</p>
+<ul class="mt-4 space-y-2 list-disc list-inside">
+<li class="">100% Certified Organic materials</li>
+<li class="">Free from weed seeds and pathogens</li>
+<li class="">Improves soil structure and water retention</li>
+<li class="">Suitable for all crop types</li>
+</ul>
+</div>
+</section>
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Target Audience -->
+<section>
+<h3 class="font-title-lg text-on-surface flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">groups</span>
+                                    Target Audience
+                                </h3>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-2 px-4 py-3 bg-secondary-container/30 border border-secondary text-on-secondary-container rounded-xl flex-1">
+<span class="material-symbols-outlined">agriculture</span>
+<div class="text-left">
+<p class="font-bold text-label-md">Farmers</p>
+<p class="text-[10px] opacity-80">Industrial Scale</p>
+</div>
+</div>
+<div class="flex items-center gap-2 px-4 py-3 bg-tertiary-fixed border border-tertiary text-on-tertiary-fixed rounded-xl flex-1">
+<span class="material-symbols-outlined">yard</span>
+<div class="text-left">
+<p class="font-bold text-label-md">Home Gardeners</p>
+<p class="text-[10px] opacity-80">Consumer Grade</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Logistics -->
+<section>
+<h3 class="font-title-lg text-on-surface flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">local_shipping</span>
+                                    Specifications
+                                </h3>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-3 bg-surface border border-outline-variant rounded-lg">
+<p class="text-[10px] uppercase text-on-surface-variant">Weight</p>
+<p class="font-bold">25.0 kg</p>
+</div>
+<div class="p-3 bg-surface border border-outline-variant rounded-lg">
+<p class="text-[10px] uppercase text-on-surface-variant">SKU</p>
+<p class="font-bold">ORG-COM-25K</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Compliance Documents -->
+<section>
+<h3 class="font-title-lg text-on-surface flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">fact_check</span>
+                                Compliance &amp; Documents
+                            </h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 bg-surface border border-outline-variant rounded-xl hover:border-primary transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-error-container text-on-error-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Organic Certification (USDA)</p>
+<p class="text-label-sm text-on-surface-variant">PDF • 2.4 MB • Verified by GreenTrust</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">visibility</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface border border-outline-variant rounded-xl hover:border-primary transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-secondary-container text-on-secondary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Nutrient Analysis Report</p>
+<p class="text-label-sm text-on-surface-variant">PDF • 1.1 MB • Issued: Jan 2024</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">visibility</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Action Bar -->
+<div class="p-8 border-t border-outline-variant bg-surface-bright flex items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-6 py-3 border-2 border-error text-error font-bold rounded-xl hover:bg-error-container/20 transition-all active:scale-95">
+<span class="material-symbols-outlined">close</span>
+                                Reject Product
+                            </button>
+<button class="flex items-center gap-2 px-6 py-3 border-2 border-tertiary text-tertiary font-bold rounded-xl hover:bg-tertiary-fixed/30 transition-all active:scale-95">
+<span class="material-symbols-outlined">edit_note</span>
+                                Request Edit
+                            </button>
+</div>
+<button class="flex items-center gap-2 px-10 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all active:scale-95">
+<span class="material-symbols-outlined">check_circle</span>
+                            Approve Product
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple hover lift for queue items
+        const queueItems = document.querySelectorAll('.bg-surface.border');
+        queueItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                if(!item.classList.contains('border-primary')) {
+                    item.classList.add('shadow-md', '-translate-y-0.5');
+                }
+            });
+            item.addEventListener('mouseleave', () => {
+                if(!item.classList.contains('border-primary')) {
+                    item.classList.remove('shadow-md', '-translate-y-0.5');
+                }
+            });
+        });
+
+        // Toggle mobile sidebar (visual only for this prototype)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f') {
+                console.log('Search focus shortcut triggered');
+                document.querySelector('input').focus();
+            }
+        });
+    </script>
+
+
+</body></html>

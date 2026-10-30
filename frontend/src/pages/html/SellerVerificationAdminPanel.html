@@ -1,0 +1,564 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Seller Verification | AgriMarket Connect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#a05e00",
+                    "on-secondary-container": "#00731e",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#cbffc2",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1b1c1c",
+                    "surface-container-highest": "#e5e2e1",
+                    "secondary-fixed-dim": "#78dc77",
+                    "primary-container": "#2e7d32",
+                    "surface-variant": "#e5e2e1",
+                    "secondary-fixed": "#94f990",
+                    "background": "#fcf9f8",
+                    "tertiary": "#7e4900",
+                    "on-tertiary-fixed": "#2c1600",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#bfcaba",
+                    "inverse-on-surface": "#f3f0ef",
+                    "secondary": "#006e1c",
+                    "on-error": "#ffffff",
+                    "on-surface": "#1b1c1c",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#1b6d24",
+                    "inverse-primary": "#88d982",
+                    "on-primary-fixed": "#002204",
+                    "surface-container": "#f0eded",
+                    "surface-dim": "#dcd9d9",
+                    "primary-fixed": "#a3f69c",
+                    "tertiary-fixed": "#ffdcbe",
+                    "on-tertiary-fixed-variant": "#693c00",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#91f78e",
+                    "primary": "#0d631b",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#eae7e7",
+                    "surface-bright": "#fcf9f8",
+                    "surface": "#fcf9f8",
+                    "surface-container-low": "#f6f3f2",
+                    "primary-fixed-dim": "#88d982",
+                    "on-tertiary-container": "#ffeee2",
+                    "tertiary-fixed-dim": "#ffb870",
+                    "outline": "#707a6c",
+                    "on-secondary-fixed-variant": "#005313",
+                    "on-primary-fixed-variant": "#005312",
+                    "on-surface-variant": "#40493d",
+                    "on-secondary-fixed": "#002204",
+                    "inverse-surface": "#303030"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "sm": "12px",
+                    "margin-desktop": "64px",
+                    "lg": "48px",
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "xl": "80px",
+                    "xs": "4px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "title-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #F8F9FA;
+            font-family: 'Inter', sans-serif;
+            color: #1b1c1c;
+        }
+        .glass-nav {
+            background: rgba(252, 249, 248, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .content-card {
+            background: #ffffff;
+            border: 1px solid #E0E0E0;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .content-card:hover {
+            box-shadow: 0px 8px 30px rgba(0,0,0,0.08);
+        }
+        .status-badge-pending {
+            background-color: #ffdcbe;
+            color: #7e4900;
+        }
+        .status-badge-reviewing {
+            background-color: #d1e4ff;
+            color: #003366;
+        }
+        .status-badge-rejected {
+            background-color: #ffdad6;
+            color: #93000a;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        /* Custom Scrollbar for heavy data tables */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #bfcaba;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-full z-40 h-screen w-64 border-r border-outline-variant bg-surface shadow-sm">
+<div class="p-6">
+<h1 class="text-title-lg font-headline-md font-bold text-primary"><span style="font-size: 24px; background-color: rgba(255, 255, 255, 0.8);">ExVeg</span></h1>
+<p class="text-on-surface-variant font-label-sm">Admin Console</p>
+</div>
+<nav class="mt-4 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-md">Sellers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md">Products</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label-md">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-label-md">Reports</span>
+</a>
+<div class="pt-4 mt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</div>
+</nav>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-64 h-16 flex justify-between items-center px-8 z-30 glass-nav border-b border-outline-variant">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-full text-body-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="Search sellers or registration IDs..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 border-r border-outline-variant pr-6">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">apps</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<p class="font-label-md text-on-surface font-bold">Admin User</p>
+<p class="font-label-sm text-on-surface-variant">System Manager</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover border-2 border-primary-container" data-alt="A professional headshot of a corporate administrator in a modern office setting. The lighting is bright and clean, emphasizing a high-end SaaS professional aesthetic. The subject is wearing a sharp charcoal suit against a blurred background of a high-tech agricultural operations center with glass partitions and soft green indoor plants." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMD263uQLLqqrGwPtZ2pB1_u-jQvmP6369y0rduFjn_oj-in45swKGUlWuZB3AZM1gbWMm_aTyiXMSdNXU6Upt8ck5VvPCJ9WizUvVAZLyRJK4094Yu-v0ACmHsb6uj_phFuXnVUiY_Mhripl5FyDptLawp7xqWz9XbLb_eOKAioQxwQhUnuOXOUuDuOktyUQR5D_ObkccgYTTm3U1TpwUAhjDLyGzcNIj5XbXnBtsVc7_vzOPICt_15iAByJXfRZrBKYtg0NjAD0">
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 pt-24 px-8 pb-12">
+<!-- Header & Statistics -->
+<section class="mb-8">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Seller Verification</h2>
+<p class="font-body-md text-on-surface-variant">Manage and review merchant applications for the AgriMarket Connect platform.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">download</span>
+                        Export Report
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+                        Invite Seller
+                    </button>
+</div>
+</div>
+<!-- Summary Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="content-card p-6 flex items-center gap-4 border-l-4 border-l-tertiary">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Total Pending</p>
+<h3 class="font-headline-md text-headline-md">142</h3>
+</div>
+</div>
+<div class="content-card p-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Approved Today</p>
+<h3 class="font-headline-md text-headline-md">28</h3>
+</div>
+</div>
+<div class="content-card p-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">report</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Flagged Apps</p>
+<h3 class="font-headline-md text-headline-md">12</h3>
+</div>
+</div>
+<div class="content-card p-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">speed</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Avg. Review Time</p>
+<h3 class="font-headline-md text-headline-md">4.2h</h3>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Data View -->
+<section class="content-card overflow-hidden">
+<!-- Filters Toolbar -->
+<div class="p-6 border-b border-outline-variant bg-surface-container-low flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<label class="font-label-sm text-on-surface-variant">Status:</label>
+<select class="bg-surface border border-outline-variant rounded-lg px-3 py-1.5 font-label-md focus:ring-primary focus:border-primary">
+<option>All Statuses</option>
+<option>Pending</option>
+<option>Reviewing</option>
+<option>Rejected</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<label class="font-label-sm text-on-surface-variant">Category:</label>
+<select class="bg-surface border border-outline-variant rounded-lg px-3 py-1.5 font-label-md focus:ring-primary focus:border-primary">
+<option>All Categories</option>
+<option>Bulk Grain Producer</option>
+<option>Organic Farming</option>
+<option>Livestock Management</option>
+<option>Equipment Vendor</option>
+</select>
+</div>
+<button class="text-primary font-label-md hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">filter_alt_off</span>
+                        Clear Filters
+                    </button>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-label-sm">Showing 1-10 of 142</span>
+<div class="flex gap-1 ml-2">
+<button class="p-1 border border-outline-variant rounded hover:bg-surface-container transition-colors disabled:opacity-50"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-1 border border-outline-variant rounded hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high">
+<tr>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Seller Name</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Business Type</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Registration Date</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Verification Status</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center font-bold text-primary">GS</div>
+<div>
+<p class="font-body-md font-bold text-on-surface">Green Valley Seeds Ltd.</p>
+<p class="font-label-sm text-on-surface-variant">ID: REG-2024-8841</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm border border-outline-variant">Seed Supplier</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">
+                                Oct 12, 2023
+                            </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full font-label-sm status-badge-pending inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 border border-outline-variant rounded-lg text-primary font-label-md hover:bg-primary/5 transition-colors">Documents</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg font-label-md shadow-sm">Review</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center font-bold text-primary">OP</div>
+<div>
+<p class="font-body-md font-bold text-on-surface">Oxen Power Equipment</p>
+<p class="font-label-sm text-on-surface-variant">ID: REG-2024-9122</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm border border-outline-variant">Heavy Machinery</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">
+                                Oct 14, 2023
+                            </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full font-label-sm status-badge-reviewing inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-[#003366]"></span>
+                                    Reviewing
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 border border-outline-variant rounded-lg text-primary font-label-md hover:bg-primary/5 transition-colors">Documents</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg font-label-md shadow-sm">Review</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center font-bold text-primary">BH</div>
+<div>
+<p class="font-body-md font-bold text-on-surface">Bountiful Harvest Co.</p>
+<p class="font-label-sm text-on-surface-variant">ID: REG-2024-7765</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm border border-outline-variant">Grain Logistics</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">
+                                Oct 15, 2023
+                            </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full font-label-sm status-badge-rejected inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+                                    Rejected
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 border border-outline-variant rounded-lg text-primary font-label-md hover:bg-primary/5 transition-colors">Documents</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg font-label-md shadow-sm">Review</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center font-bold text-primary">AF</div>
+<div>
+<p class="font-body-md font-bold text-on-surface">Artisan Fertilizers LLC</p>
+<p class="font-label-sm text-on-surface-variant">ID: REG-2024-1002</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm border border-outline-variant">Chemicals</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">
+                                Oct 16, 2023
+                            </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full font-label-sm status-badge-pending inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 border border-outline-variant rounded-lg text-primary font-label-md hover:bg-primary/5 transition-colors">Documents</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg font-label-md shadow-sm">Review</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center font-bold text-primary">PS</div>
+<div>
+<p class="font-body-md font-bold text-on-surface">Pure Soils Organic</p>
+<p class="font-label-sm text-on-surface-variant">ID: REG-2024-3329</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm border border-outline-variant">Organic Farming</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">
+                                Oct 16, 2023
+                            </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full font-label-sm status-badge-pending inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 border border-outline-variant rounded-lg text-primary font-label-md hover:bg-primary/5 transition-colors">Documents</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg font-label-md shadow-sm">Review</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer/Pagination -->
+<div class="p-6 bg-surface-container-low flex justify-between items-center">
+<div class="flex items-center gap-4">
+<span class="font-label-sm text-on-surface-variant">Rows per page:</span>
+<select class="bg-surface border border-outline-variant rounded px-2 py-1 text-label-sm">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[20px]">first_page</span></button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<span class="px-4 font-label-sm text-on-surface font-bold">Page 1 of 15</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[20px]">last_page</span></button>
+</div>
+</div>
+</section>
+<!-- Documentation & Context Panel (Quick View Mockup) -->
+<section class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<div class="lg:col-span-2 content-card p-6">
+<div class="flex items-center justify-between mb-6">
+<h4 class="font-title-lg text-title-lg text-on-surface">Verification Guidelines</h4>
+<span class="material-symbols-outlined text-primary cursor-pointer">info</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full bg-secondary-container/30 flex-shrink-0 flex items-center justify-center text-secondary">1</div>
+<p class="font-body-md text-on-surface-variant">Confirm Business Registration Numbers against the National Agricultural Registry database for authenticity.</p>
+</div>
+<div class="flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full bg-secondary-container/30 flex-shrink-0 flex items-center justify-center text-secondary">2</div>
+<p class="font-body-md text-on-surface-variant">Review Tax Compliance certificates and ensure they have a validity period of at least 6 months.</p>
+</div>
+<div class="flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full bg-secondary-container/30 flex-shrink-0 flex items-center justify-center text-secondary">3</div>
+<p class="font-body-md text-on-surface-variant">Cross-check the primary warehouse location via geotagging verification on the provided site photos.</p>
+</div>
+</div>
+</div>
+<div class="content-card p-6 bg-gradient-to-br from-primary/5 to-transparent">
+<h4 class="font-title-lg text-title-lg text-on-surface mb-4">Verification Health</h4>
+<div class="relative w-32 h-32 mx-auto mb-4">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="72.8" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-headline-md font-bold text-on-surface">80%</span>
+<span class="text-label-sm text-on-surface-variant">Cleared</span>
+</div>
+</div>
+<p class="text-center font-label-md text-on-surface-variant mb-6">Current throughput is higher than weekly average (+12%)</p>
+<div class="flex justify-between items-center text-label-sm border-t border-outline-variant pt-4">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Success</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-error"></span> Failure</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary"></span> Pending</span>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB for Quick Actions -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform z-50">
+<span class="material-symbols-outlined text-[28px]">bolt</span>
+</button>
+<script>
+        // Simple Interaction: Mock Review Status Change
+        document.querySelectorAll('tr.group').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'BUTTON') {
+                    const sellerName = row.querySelector('.font-bold.text-on-surface').innerText;
+                    console.log('Quick previewing:', sellerName);
+                    // Implementation for side drawer could go here
+                }
+            });
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+
+
+</body></html>
