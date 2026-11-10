@@ -141,7 +141,7 @@ const SellerRegistrationBankDetails = () => {
 <footer className="bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant w-full py-8">
 <div className="flex flex-col md:flex-row justify-between items-center gap-4 px-margin-mobile md:px-margin-desktop w-full">
 <div className="font-headline-sm text-headline-sm text-on-surface">
-                AgriMarket Connect
+                ExVeg
             </div>
 <div className="flex gap-6">
 <a className="text-on-surface-variant font-label-sm text-label-sm hover:text-primary underline transition-opacity hover:opacity-80" href="#">Privacy Policy</a>
@@ -150,7 +150,7 @@ const SellerRegistrationBankDetails = () => {
 <a className="text-on-surface-variant font-label-sm text-label-sm hover:text-primary underline transition-opacity hover:opacity-80" href="#">Support</a>
 </div>
 <div className="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">
-                © 2024 AgriMarket Connect. All rights reserved.
+                © 2024 ExVeg. All rights reserved.
             </div>
 </div>
 </footer>

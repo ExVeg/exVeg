@@ -19,10 +19,13 @@ const MainLayout = () => {
       if (currentUser) {
         try {
           const snap = await getDoc(doc(db, 'users', currentUser.uid));
-          if (snap.exists()) setRole(snap.data().role);
-          else setRole(currentUser.email === 'sumit2325888@gmail.com' ? 'Admin' : 'Buyer');
+          if (snap.exists()) {
+            setRole(snap.data().role ?? 'Buyer');
+          } else {
+            setRole('Buyer');
+          }
         } catch {
-          setRole(currentUser.email === 'sumit2325888@gmail.com' ? 'Admin' : 'Buyer');
+          setRole('Buyer');
         }
       } else {
         setRole(null);
@@ -51,6 +54,18 @@ const MainLayout = () => {
             <Link to="/nursery" className="text-on-surface-variant hover:text-primary transition-colors duration-200">Nursery</Link>
             <Link to="/tools" className="text-on-surface-variant hover:text-primary transition-colors duration-200">Tools</Link>
             <Link to="/analytics" className="text-on-surface-variant hover:text-primary transition-colors duration-200">Analytics</Link>
+            {role === 'Admin' && (
+              <Link to="/admin-dashboard" className="text-primary font-bold flex items-center gap-1 hover:text-primary/80 transition-colors">
+                <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                Admin Dashboard
+              </Link>
+            )}
+            {role === 'Seller' && (
+              <Link to="/seller-dashboard" className="text-primary font-bold flex items-center gap-1 hover:text-primary/80 transition-colors">
+                <span className="material-symbols-outlined text-sm">storefront</span>
+                Vendor Portal
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-md">
             <div className="hidden md:flex items-center gap-sm">
@@ -98,7 +113,7 @@ const MainLayout = () => {
       <footer className="bg-surface-container-highest dark:bg-inverse-surface font-body-md text-body-md border-t border-outline-variant w-full mt-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-xl max-w-7xl mx-auto">
           <div className="col-span-1 md:col-span-1">
-            <span className="font-headline-lg text-headline-lg text-primary block mb-md">AgriMarket Connect</span>
+            <span className="font-headline-lg text-headline-lg text-primary block mb-md">ExVeg</span>
             <p className="text-on-surface-variant mb-lg">Cultivating growth through technology. Connecting the heart of farming with the pulse of modern retail.</p>
           </div>
           <div>
@@ -129,7 +144,7 @@ const MainLayout = () => {
           </div>
         </div>
         <div className="px-margin-desktop py-md border-t border-outline-variant/30 text-center text-on-surface-variant font-label-sm">
-          &copy; {new Date().getFullYear()} AgriMarket Connect. All rights reserved.
+          © {new Date().getFullYear()} ExVeg. All rights reserved.
         </div>
       </footer>
     </div>

@@ -61,6 +61,21 @@
   --spacing-margin-desktop: 64px;
   --spacing-margin-mobile: 16px;
 
+  --width-xs: 20rem;
+  --width-sm: 24rem;
+  --width-md: 28rem;
+  --width-lg: 32rem;
+  --width-xl: 36rem;
+  --width-2xl: 42rem;
+  --width-3xl: 48rem;
+  --max-width-xs: 20rem;
+  --max-width-sm: 24rem;
+  --max-width-md: 28rem;
+  --max-width-lg: 32rem;
+  --max-width-xl: 36rem;
+  --max-width-2xl: 42rem;
+  --max-width-3xl: 48rem;
+
   --font-family-headline-md: "Hanken Grotesk", sans-serif;
   --font-family-label-md: "Inter", sans-serif;
   --font-family-headline-lg: "Hanken Grotesk", sans-serif;

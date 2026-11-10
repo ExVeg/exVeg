@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, updateQuantity, clearCart } from '../store/cartSlice';
 import { useToast } from '../context/ToastContext';
+import { db, auth } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -24,6 +26,7 @@ const Cart = () => {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [placedOrderId, setPlacedOrderId] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,17 +51,10 @@ const Cart = () => {
     setIsSubmitting(true);
     setStatus({ type: '', message: '' });
 
-    // Unique email per seller — group items by sellerEmail
-    const sellerGroups = {};
-    cartItems.forEach((item) => {
-      const key = item.sellerEmail || 'seller@exveg.com';
-      if (!sellerGroups[key]) sellerGroups[key] = [];
-      sellerGroups[key].push(item);
-    });
-
     try {
-      // Send one checkout request covering all items (to admin, seller gets info too)
-      const response = await axios.post('http://localhost:5000/api/checkout', {
+      // 1. Write order directly to Firestore so buyer/seller/admin orders always work
+      const orderData = {
+        buyerId: auth.currentUser?.uid || 'guest',
         buyerName: form.buyerName,
         email: form.email,
         phone: form.phone,
@@ -68,21 +64,58 @@ const Cart = () => {
         pincode: form.pincode,
         deliveryDate: form.deliveryDate,
         notes: form.notes,
-        // Cart items passed as structured data
-        cartSummary: buildCartSummary(),
-        totalAmount: subtotal.toFixed(2),
+        items: cartItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          imageUrl: item.imageUrl || '',
+          category: item.category || '',
+          sellerId: item.sellerId || '',
+          sellerName: item.sellerName || 'Verified Seller',
+          sellerEmail: item.sellerEmail || 'seller@exveg.com',
+        })),
+        totalAmount: parseFloat(subtotal.toFixed(2)),
         itemCount: itemsLabel,
-        // Use first seller's email or default
+        sellerId: cartItems[0]?.sellerId || 'unknown',
         sellerEmail: cartItems[0]?.sellerEmail || 'seller@exveg.com',
-        adminEmail: 'raushanraj211003@gmail.com',
-      });
+        sellerName: cartItems[0]?.sellerName || 'Verified Seller',
+        status: 'Placed',
+        createdAt: new Date().toISOString(),
+      };
 
-      setStatus({ type: 'success', message: response.data.message });
-      showToast({ message: 'Order placed! Confirmation email sent.', type: 'success' });
+      const docRef = await addDoc(collection(db, 'orders'), orderData);
+      setPlacedOrderId(docRef.id);
+
+      // 2. Optionally attempt to notify backend email service (non-blocking)
+      try {
+        await axios.post('http://localhost:5000/api/checkout', {
+          orderId: docRef.id,
+          buyerName: form.buyerName,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          city: form.city,
+          state: form.state,
+          pincode: form.pincode,
+          deliveryDate: form.deliveryDate,
+          notes: form.notes,
+          cartSummary: buildCartSummary(),
+          totalAmount: subtotal.toFixed(2),
+          itemCount: itemsLabel,
+          sellerEmail: cartItems[0]?.sellerEmail || 'seller@exveg.com',
+          adminEmail: 'raushanraj211003@gmail.com',
+        }, { timeout: 3000 });
+      } catch (backendErr) {
+        console.info('Backend email notification skipped (running client-side Firestore flow).');
+      }
+
+      showToast({ message: 'Order placed successfully!', type: 'success' });
       dispatch(clearCart());
       setOrderPlaced(true);
     } catch (error) {
-      const msg = error.response?.data?.message || 'Unable to submit checkout. Please try again.';
+      console.error('Order creation error:', error);
+      const msg = error.message || 'Unable to submit checkout. Please try again.';
       setStatus({ type: 'error', message: msg });
       showToast({ message: msg, type: 'error' });
     } finally {
@@ -98,7 +131,7 @@ const Cart = () => {
           <span className="material-symbols-outlined text-primary text-5xl">shopping_cart</span>
         </div>
         <h2 className="font-headline-md text-headline-md text-on-surface">Your cart is empty</h2>
-        <p className="text-on-surface-variant text-body-md text-center max-w-md">Browse our marketplace and add products to your cart to get started.</p>
+        <p className="text-on-surface-variant text-body-md text-center max-w-[28rem]">Browse our marketplace and add products to your cart to get started.</p>
         <Link to="/products" className="bg-primary text-on-primary px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all">
           Shop Now
         </Link>
@@ -109,17 +142,27 @@ const Cart = () => {
   // Order success state
   if (orderPlaced) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 px-4">
-        <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center animate-bounce">
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 px-4 text-center">
+        <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center animate-bounce mx-auto">
           <span className="material-symbols-outlined text-primary text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
         </div>
         <h2 className="font-headline-lg text-headline-lg text-on-surface">Order Placed Successfully!</h2>
-        <p className="text-on-surface-variant text-body-md text-center max-w-md">
-          A confirmation email has been sent to <strong>{form.email}</strong> and the seller has been notified.
+        {placedOrderId && (
+          <p className="font-mono text-sm bg-surface-container px-3 py-1.5 rounded-lg inline-block text-on-surface-variant">
+            Order Reference: <strong className="text-primary">{placedOrderId}</strong>
+          </p>
+        )}
+        <p className="text-on-surface-variant text-body-md max-w-[28rem] mx-auto">
+          Thank you for your order, <strong>{form.buyerName}</strong>. A confirmation has been registered to <strong>{form.email}</strong> and the seller has been notified.
         </p>
-        <Link to="/products" className="bg-primary text-on-primary px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all">
-          Continue Shopping
-        </Link>
+        <div className="flex gap-4 mt-2 justify-center">
+          <Link to="/products" className="bg-primary text-on-primary px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all">
+            Continue Shopping
+          </Link>
+          <Link to="/analytics" className="border border-outline px-6 py-3 rounded-xl font-bold text-on-surface hover:bg-surface-container transition-all">
+            View My Orders
+          </Link>
+        </div>
       </div>
     );
   }

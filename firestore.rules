@@ -1,0 +1,172 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helper Functions ──────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Fetch the caller's role from /users/{uid}
+    function getRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && getRole() == 'Admin';
+    }
+
+    function isSeller() {
+      return isSignedIn() && getRole() == 'Seller';
+    }
+
+    function isBuyer() {
+      return isSignedIn() && getRole() == 'Buyer';
+    }
+
+    function isSellerOrAdmin() {
+      return isSignedIn() && (getRole() == 'Seller' || getRole() == 'Admin');
+    }
+
+    // ─── /users/{uid} ─────────────────────────────────────────────────────
+    // A user can read & write their own profile; Admins can read all profiles.
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isSignedIn() && isOwner(uid);
+      allow update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ─── /products/{productId} ────────────────────────────────────────────
+    // Buyers and guests can read Approved products.
+    // Sellers can read their own products (any status).
+    // Sellers can create products (must set their own sellerId).
+    // Sellers can update their own products (not the status field).
+    // Admins can read/write all products (including approval / status changes).
+    match /products/{productId} {
+      allow read: if
+        // Public read for approved products
+        resource.data.status == 'Approved'
+        // Seller can read their own listings
+        || (isSignedIn() && resource.data.sellerId == request.auth.uid)
+        // Admin can read everything
+        || isAdmin();
+
+      allow create: if
+        isSeller()
+        && request.resource.data.sellerId == request.auth.uid
+        && request.resource.data.status == 'Pending'; // Sellers cannot self-approve
+
+      allow update: if
+        // Seller can update own product but cannot change status themselves
+        (isSeller()
+          && resource.data.sellerId == request.auth.uid
+          && request.resource.data.sellerId == request.auth.uid
+          && request.resource.data.status == resource.data.status) // status unchanged
+        // Admin can update anything (approve, reject, etc.)
+        || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    // ─── /nursery/{listingId} ─────────────────────────────────────────────
+    match /nursery/{listingId} {
+      allow read: if
+        resource.data.status == 'Approved'
+        || (isSignedIn() && resource.data.sellerId == request.auth.uid)
+        || isAdmin();
+
+      allow create: if
+        isSeller()
+        && request.resource.data.sellerId == request.auth.uid
+        && request.resource.data.status == 'Pending';
+
+      allow update: if
+        (isSeller()
+          && resource.data.sellerId == request.auth.uid
+          && request.resource.data.sellerId == request.auth.uid
+          && request.resource.data.status == resource.data.status)
+        || isAdmin();
+
+      allow delete: if
+        (isSeller() && resource.data.sellerId == request.auth.uid)
+        || isAdmin();
+    }
+
+    // ─── /tools/{listingId} ───────────────────────────────────────────────
+    match /tools/{listingId} {
+      allow read: if
+        resource.data.status == 'Approved'
+        || (isSignedIn() && resource.data.sellerId == request.auth.uid)
+        || isAdmin();
+
+      allow create: if
+        isSeller()
+        && request.resource.data.sellerId == request.auth.uid
+        && request.resource.data.status == 'Pending';
+
+      allow update: if
+        (isSeller()
+          && resource.data.sellerId == request.auth.uid
+          && request.resource.data.sellerId == request.auth.uid
+          && request.resource.data.status == resource.data.status)
+        || isAdmin();
+
+      allow delete: if
+        (isSeller() && resource.data.sellerId == request.auth.uid)
+        || isAdmin();
+    }
+
+    // ─── /orders/{orderId} ────────────────────────────────────────────────
+    // Buyers can create orders and read their own orders.
+    // Sellers can read orders where their sellerId matches.
+    // Admins have full access.
+    match /orders/{orderId} {
+      allow read: if
+        isAdmin()
+        || (isSignedIn() && resource.data.buyerId == request.auth.uid)
+        || (isSignedIn() && resource.data.sellerId == request.auth.uid);
+
+      allow create: if
+        isSignedIn()
+        && request.resource.data.buyerId == request.auth.uid;
+
+      allow update: if
+        // Seller can update status of their own orders
+        (isSeller() && resource.data.sellerId == request.auth.uid)
+        || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    // ─── /notifications/{notifId} ─────────────────────────────────────────
+    match /notifications/{notifId} {
+      allow read: if
+        isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isAdmin(); // Only server/admin creates notifications
+      allow update: if
+        isSignedIn() && resource.data.userId == request.auth.uid; // Mark as read
+      allow delete: if
+        isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // ─── /cart/{cartId} ───────────────────────────────────────────────────
+    match /cart/{cartId} {
+      allow read, write: if
+        isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if
+        isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ─── Deny all other reads/writes by default ────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

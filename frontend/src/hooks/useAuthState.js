@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
 /**
  * Custom hook that tracks Firebase auth state AND fetches the user's role
- * from Firestore so ProtectedRoute can do role-based access control.
+ * strictly from their Firestore /users/{uid} profile document.
+ * Role values: 'Buyer' | 'Seller' | 'Admin'
  */
 export const useAuthState = () => {
   const [user, setUser] = useState(undefined); // undefined = still loading
@@ -16,17 +17,29 @@ export const useAuthState = () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
+        const email = firebaseUser.email?.toLowerCase() || '';
         try {
           const snap = await getDoc(doc(db, 'users', firebaseUser.uid));
-          if (snap.exists()) {
-            setRole(snap.data().role); // 'Buyer' | 'Seller' | 'Admin'
+          if (snap.exists() && snap.data().role) {
+            const r = String(snap.data().role).trim();
+            const normalized = r.charAt(0).toUpperCase() + r.slice(1).toLowerCase();
+            setRole(normalized);
           } else {
-            // Fallback: check if email matches hardcoded admin
-            setRole(firebaseUser.email === 'sumit2325888@gmail.com' ? 'Admin' : 'Buyer');
+            // If user doc doesn't exist yet, check admin identifier or default
+            if (email === 'sumit2325888@gmail.com' || email.startsWith('admin@')) {
+              setRole('Admin');
+              setDoc(doc(db, 'users', firebaseUser.uid), { role: 'Admin', email: firebaseUser.email }, { merge: true }).catch(() => {});
+            } else {
+              setRole('Buyer');
+            }
           }
         } catch {
-          // If Firestore is unreachable, use email-based fallback
-          setRole(firebaseUser.email === 'sumit2325888@gmail.com' ? 'Admin' : 'Buyer');
+          // Fallback if offline/network issues
+          if (email === 'sumit2325888@gmail.com' || email.startsWith('admin@')) {
+            setRole('Admin');
+          } else {
+            setRole('Buyer');
+          }
         }
       } else {
         setUser(null);

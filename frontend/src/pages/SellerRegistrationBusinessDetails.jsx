@@ -114,7 +114,7 @@ const SellerRegistrationBusinessDetails = () => {
 </div>
 <div className="mt-8 flex items-center justify-center gap-2 text-on-surface-variant">
 <span className="material-symbols-outlined text-[18px]">lock</span>
-<span className="text-label-sm">Your data is encrypted and secure with AgriMarket Connect protocols.</span>
+<span className="text-label-sm">Your data is encrypted and secure with ExVeg protocols.</span>
 </div>
 </div>
 </main>
@@ -122,8 +122,8 @@ const SellerRegistrationBusinessDetails = () => {
 <footer className="w-full py-8 bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant">
 <div className="flex flex-col md:flex-row justify-between items-center gap-4 px-margin-mobile md:px-margin-desktop w-full">
 <div className="flex flex-col items-center md:items-start gap-2">
-<div className="font-headline-sm text-headline-sm text-on-surface">AgriMarket Connect</div>
-<div className="font-label-sm text-label-sm text-on-surface-variant">© 2024 AgriMarket Connect. All rights reserved.</div>
+<div className="font-headline-sm text-headline-sm text-on-surface">ExVeg</div>
+<div className="font-label-sm text-label-sm text-on-surface-variant">© 2024 ExVeg. All rights reserved.</div>
 </div>
 <div className="flex gap-6">
 <a className="text-on-surface-variant font-label-sm hover:text-primary underline transition-opacity hover:opacity-80" href="#">Privacy Policy</a>

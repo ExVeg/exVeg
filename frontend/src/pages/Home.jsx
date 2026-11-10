@@ -271,7 +271,7 @@ const Home = () => {
       <section className="py-xl px-margin-desktop bg-surface-container-highest">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-xl reveal">
-            <h2 className="font-headline-lg text-headline-lg mb-sm">Why Choose AgriMarket Connect</h2>
+            <h2 className="font-headline-lg text-headline-lg mb-sm">Why Choose ExVeg</h2>
             <p className="text-on-surface-variant max-w-2xl mx-auto">Building trust in every seed and tool we deliver.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">

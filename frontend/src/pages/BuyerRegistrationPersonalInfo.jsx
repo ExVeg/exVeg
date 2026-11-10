@@ -112,7 +112,7 @@ const BuyerRegistrationPersonalInfo = () => {
 <div className="flex items-start gap-3 py-2">
 <input className="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" id="terms" type="checkbox" />
 <label className="font-body-md text-on-surface-variant text-sm" htmlFor="terms">
-                        I agree to the <a className="text-primary font-bold hover:underline" href="#">Terms of Service</a> and <a className="text-primary font-bold hover:underline" href="#">Privacy Policy</a> of AgriMarket Connect.
+                        I agree to the <a className="text-primary font-bold hover:underline" href="#">Terms of Service</a> and <a className="text-primary font-bold hover:underline" href="#">Privacy Policy</a> of ExVeg.
                     </label>
 </div>
 {/* CTA */}
@@ -139,7 +139,7 @@ const BuyerRegistrationPersonalInfo = () => {
 <footer className="bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant w-full py-8">
 <div className="flex flex-col md:flex-row justify-between items-center gap-4 px-margin-mobile md:px-margin-desktop w-full">
 <div className="flex items-center gap-2">
-<span className="font-headline-sm text-headline-sm text-on-surface font-bold">AgriMarket Connect</span>
+<span className="font-headline-sm text-headline-sm text-on-surface font-bold">ExVeg</span>
 </div>
 <div className="flex flex-wrap justify-center gap-6">
 <a className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-opacity hover:opacity-80 underline" href="#">Privacy Policy</a>
@@ -148,7 +148,7 @@ const BuyerRegistrationPersonalInfo = () => {
 <a className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-opacity hover:opacity-80 underline" href="#">Support</a>
 </div>
 <p className="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">
-                © 2024 AgriMarket Connect. All rights reserved.
+                © 2024 ExVeg. All rights reserved.
             </p>
 </div>
 </footer>
