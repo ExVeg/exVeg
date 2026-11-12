@@ -188,17 +188,17 @@ const Cart = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="mb-8 flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-fixed">
-          <span className="material-symbols-outlined text-primary text-3xl">shopping_cart</span>
+      <div className="bg-gradient-to-r from-[#143d23] to-[#166534] text-white rounded-2xl p-6 mb-8 flex items-center gap-4 shadow-md">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15">
+          <span className="material-symbols-outlined text-amber-300 text-3xl">shopping_cart</span>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-on-surface">Your Cart</h1>
-          <p className="text-on-surface-variant text-sm">{itemsLabel} item{itemsLabel !== 1 ? 's' : ''} · ₹{subtotal.toFixed(2)} total</p>
+          <h1 className="text-2xl font-extrabold">Your Cart</h1>
+          <p className="text-emerald-100 text-sm">{itemsLabel} item{itemsLabel !== 1 ? 's' : ''} · ₹{subtotal.toFixed(2)} total</p>
         </div>
         <button
           onClick={() => { dispatch(clearCart()); showToast({ message: 'Cart cleared.', type: 'info' }); }}
-          className="ml-auto text-sm text-error hover:underline font-medium"
+          className="ml-auto text-xs bg-white/15 hover:bg-white/25 text-white px-4 py-2 rounded-full font-bold transition-colors"
         >
           Clear Cart
         </button>
@@ -324,7 +324,7 @@ const Cart = () => {
               type="submit"
               form="checkout-form"
               disabled={isSubmitting || cartItems.length === 0}
-              className="mt-6 w-full rounded-xl bg-primary px-5 py-4 font-bold text-white hover:shadow-lg active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+              className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#166534] to-[#15803d] px-5 py-4 font-bold text-white hover:shadow-lg active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-2"
             >
               <span className="material-symbols-outlined">{isSubmitting ? 'hourglass_empty' : 'send'}</span>
               {isSubmitting ? 'Placing Order...' : 'Place Order'}

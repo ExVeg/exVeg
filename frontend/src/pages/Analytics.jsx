@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useAuthState } from '../hooks/useAuthState';
 
 // ── Stat Card ──────────────────────────────────────────────────────────────────
 const StatCard = ({ icon, label, value, sub, iconBg = 'bg-primary-fixed', iconColor = 'text-primary' }) => (
-  <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-md shadow-sm flex items-start gap-4">
+  <div className="bg-white border border-outline-variant/40 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
     <div className={`w-12 h-12 ${iconBg} rounded-xl flex items-center justify-center flex-shrink-0`}>
       <span className={`material-symbols-outlined ${iconColor} text-2xl`}>{icon}</span>
     </div>
     <div>
-      <p className="text-on-surface-variant font-label-md">{label}</p>
-      <p className="font-headline-md text-headline-md text-on-surface">{value}</p>
+      <p className="text-on-surface-variant font-label-md text-xs uppercase tracking-wide">{label}</p>
+      <p className="font-headline-md text-2xl font-extrabold text-[#143d23] mt-0.5">{value}</p>
       {sub && <p className="text-xs text-on-surface-variant mt-0.5">{sub}</p>}
     </div>
   </div>
@@ -320,13 +321,15 @@ const Analytics = () => {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
-        <div className="w-24 h-24 bg-primary-fixed rounded-full flex items-center justify-center mb-6">
-          <span className="material-symbols-outlined text-primary text-5xl">analytics</span>
+        <div className="bg-white border border-outline-variant/40 rounded-2xl shadow-sm p-10 text-center max-w-lg w-full">
+          <div className="w-20 h-20 bg-primary-fixed rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <span className="material-symbols-outlined text-primary text-4xl">analytics</span>
+          </div>
+          <h1 className="text-3xl font-headline-lg font-extrabold text-[#143d23] mb-3">Analytics Dashboard</h1>
+          <p className="text-on-surface-variant text-center">
+            Please <Link to="/login" className="text-primary font-bold hover:underline">sign in</Link> to view your personalised analytics.
+          </p>
         </div>
-        <h1 className="text-4xl font-headline-lg text-primary mb-4">Analytics Dashboard</h1>
-        <p className="text-on-surface-variant text-center max-w-[32rem]">
-          Please <a href="/login" className="text-primary font-semibold hover:underline">sign in</a> to view your personalised analytics.
-        </p>
       </div>
     );
   }
@@ -335,15 +338,16 @@ const Analytics = () => {
   const roleIcon = role === 'Admin' ? 'admin_panel_settings' : role === 'Seller' ? 'storefront' : 'person';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop py-lg">
+    <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop py-8">
       {/* Page Header */}
-      <div className="flex items-center gap-4 mb-lg">
-        <div className="w-14 h-14 bg-primary-fixed rounded-xl flex items-center justify-center">
-          <span className="material-symbols-outlined text-primary text-3xl">{roleIcon}</span>
+      <div className="bg-gradient-to-r from-[#143d23] to-[#166534] text-white rounded-2xl p-6 mb-8 flex items-center gap-4 shadow-md">
+        <div className="w-14 h-14 bg-white/15 rounded-xl flex items-center justify-center">
+          <span className="material-symbols-outlined text-amber-300 text-3xl">{roleIcon}</span>
         </div>
         <div>
-          <h1 className="font-headline-md text-headline-md text-on-surface">Analytics Dashboard</h1>
-          <p className="text-on-surface-variant font-body-md">{roleLabel} — live data from ExVeg</p>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">{role || 'User'} Dashboard</span>
+          <h1 className="font-headline-md text-2xl md:text-3xl font-extrabold">Analytics Dashboard</h1>
+          <p className="text-emerald-100 text-sm">{roleLabel} — live data from ExVeg</p>
         </div>
       </div>
 

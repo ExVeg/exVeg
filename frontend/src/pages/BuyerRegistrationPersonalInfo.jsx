@@ -1,23 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const BuyerRegistrationPersonalInfo = () => {
   return (
     <>
       
 {/* TopNavBar */}
-<nav className="fixed top-0 w-full bg-white/80 dark:bg-surface-container/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm z-50 flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop">
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-primary text-3xl" style={{"fontVariationSettings":"'FILL' 1"}}>agriculture</span>
-<span className="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">ExVeg</span>
-</div>
-<div className="flex items-center gap-6">
-<a className="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md" href="#">Marketplace</a>
-<a className="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md" href="#">Solutions</a>
-<a className="text-primary font-bold border-b-2 border-primary pb-1 active:scale-95 transition-transform font-body-md" href="#">Log In</a>
+<nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm z-50 flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop">
+<Link to="/" className="flex items-center gap-2">
+<span className="material-symbols-outlined text-primary text-3xl" style={{"fontVariationSettings":"'FILL' 1"}}>spa</span>
+<span className="font-headline-md text-headline-md font-extrabold text-[#166534]">ExVeg</span>
+</Link>
+<div className="flex items-center gap-4 md:gap-6">
+<LanguageSwitcher compact />
+<Link className="hidden sm:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md" to="/products">Marketplace</Link>
+<Link className="hidden sm:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md" to="/">Home</Link>
+<Link className="bg-gradient-to-r from-[#166534] to-[#15803d] text-white px-5 py-1.5 rounded-full font-bold text-sm active:scale-95 transition-transform font-body-md" to="/login">Log In</Link>
 </div>
 </nav>
-<main className="flex-grow pt-32 pb-20 px-margin-mobile md:px-margin-desktop flex flex-col items-center">
+<main className="flex-grow pt-32 pb-20 px-margin-mobile md:px-margin-desktop flex flex-col items-center bg-[#f8faf5] min-h-screen">
 {/* Progress Indicator */}
 <div className="w-full max-w-2xl mb-12">
 <div className="flex items-center justify-between relative">

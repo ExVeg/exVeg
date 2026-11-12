@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const UserOrderManagementAdminPanel = () => {
   const navigate = useNavigate();
@@ -64,33 +65,38 @@ const UserOrderManagementAdminPanel = () => {
       )}
 
       {/* SideNavBar */}
-      <aside className="fixed left-0 top-0 h-full w-64 border-r border-outline-variant bg-surface z-40 hidden md:flex flex-col">
-        <div className="p-6">
-          <Link to="/" className="text-title-lg font-headline-md font-bold text-primary">ExVeg</Link>
-          <p className="font-label-md text-on-surface-variant">Admin Console</p>
+      <aside className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl z-40 hidden md:flex flex-col">
+        <div className="p-6 border-b border-white/10">
+          <Link to="/" className="text-xl font-headline-md font-extrabold text-white flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
+              <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+            </span>
+            ExVeg
+          </Link>
+          <p className="font-label-md text-emerald-200/80 mt-1">Admin Console</p>
         </div>
-        <nav className="px-4 space-y-1.5 flex-1">
-          <Link to="/admin-dashboard" className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg">
+        <nav className="px-4 py-4 space-y-1.5 flex-1">
+          <Link to="/admin-dashboard" className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-label-md">Dashboard</span>
           </Link>
-          <Link to="/seller-verification" className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg">
+          <Link to="/seller-verification" className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
             <span className="material-symbols-outlined">storefront</span>
             <span className="font-label-md">Sellers</span>
           </Link>
-          <Link to="/user-order-management" className="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold">
+          <Link to="/user-order-management" className="flex items-center gap-3 px-4 py-3 bg-white/15 text-amber-300 rounded-xl font-bold shadow-sm">
             <span className="material-symbols-outlined">shopping_cart</span>
             <span className="font-label-md">Orders & Users</span>
           </Link>
-          <Link to="/analytics" className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg">
+          <Link to="/analytics" className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
             <span className="material-symbols-outlined">bar_chart</span>
             <span className="font-label-md">Analytics</span>
           </Link>
         </nav>
-        <div className="p-4 border-t border-outline-variant">
+        <div className="p-4 border-t border-white/10 bg-black/15">
           <button
             onClick={() => { signOut(auth); navigate('/login'); }}
-            className="w-full flex items-center gap-2 p-2 rounded-lg text-error hover:bg-error-container/30 text-sm font-bold"
+            className="w-full flex items-center justify-center gap-2 p-2 rounded-xl text-rose-200 hover:bg-rose-500/20 text-sm font-bold"
           >
             <span className="material-symbols-outlined">logout</span>
             Sign Out
@@ -99,10 +105,11 @@ const UserOrderManagementAdminPanel = () => {
       </aside>
 
       {/* TopNavBar */}
-      <header className="fixed top-0 right-0 left-0 md:left-64 h-16 flex justify-between items-center px-8 z-30 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-        <h2 className="font-headline-md text-headline-md text-on-surface">Order & User Operations</h2>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-on-surface-variant font-medium">{adminEmail}</span>
+      <header className="fixed top-0 right-0 left-0 md:left-64 h-16 flex justify-between items-center px-8 z-30 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm">
+        <h2 className="font-headline-md text-xl font-bold text-[#143d23]">Order & User Operations</h2>
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher compact />
+          <span className="text-sm text-on-surface-variant font-medium hidden sm:inline">{adminEmail}</span>
           <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">
             {(adminEmail[0] || 'A').toUpperCase()}
           </div>
@@ -110,7 +117,7 @@ const UserOrderManagementAdminPanel = () => {
       </header>
 
       {/* Main Content */}
-      <main className="pt-24 pb-12 px-8 md:ml-64 min-h-screen bg-background">
+      <main className="pt-24 pb-12 px-8 md:ml-64 min-h-screen bg-[#f8faf5]">
         <div className="max-w-7xl mx-auto">
           {/* Summary Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-gutter mb-8">

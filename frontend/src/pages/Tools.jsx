@@ -34,7 +34,7 @@ const ToolProductModal = ({ existing, onClose, onSaved, sellerId, sellerName }) 
     try {
       const payload = {
         name: form.name.trim(),
-        category: form.category,
+        category: form.category.trim(),
         price: parseFloat(form.price),
         stock: parseInt(form.stock),
         description: form.description.trim(),
@@ -78,10 +78,19 @@ const ToolProductModal = ({ existing, onClose, onSaved, sellerId, sellerName }) 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Category *</label>
-              <select required name="category" value={form.category} onChange={handleChange}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none">
-                {TOOLS_CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <input
+                required
+                type="text"
+                list="tools-category-options"
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none"
+                placeholder="Enter or pick category"
+              />
+              <datalist id="tools-category-options">
+                {TOOLS_CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c} />)}
+              </datalist>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Brand</label>
@@ -182,10 +191,20 @@ const Tools = () => {
     showToast(editItem ? '✅ Listing updated!' : '✅ Listing submitted for approval!');
   };
 
+  const dynamicCategories = [
+    'All',
+    ...new Set([
+      ...TOOLS_CATEGORIES.filter(c => c !== 'All'),
+      ...listings.map(l => l.category).filter(Boolean)
+    ])
+  ];
+
   const filtered = listings.filter(l => {
-    const matchSearch = l.name?.toLowerCase().includes(search.toLowerCase()) ||
-      l.description?.toLowerCase().includes(search.toLowerCase()) ||
-      l.brand?.toLowerCase().includes(search.toLowerCase());
+    const q = search.toLowerCase();
+    const matchSearch = l.name?.toLowerCase().includes(q) ||
+      l.description?.toLowerCase().includes(q) ||
+      l.brand?.toLowerCase().includes(q) ||
+      l.category?.toLowerCase().includes(q);
     const matchCat = category === 'All' || l.category === category;
     return matchSearch && matchCat;
   });
@@ -208,14 +227,15 @@ const Tools = () => {
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-lg gap-4">
+      <div className="bg-gradient-to-r from-[#143d23] to-[#166534] text-white rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between mb-lg gap-4 shadow-md">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-primary-fixed rounded-xl flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary text-3xl">handyman</span>
+          <div className="w-14 h-14 bg-white/15 rounded-xl flex items-center justify-center">
+            <span className="material-symbols-outlined text-amber-300 text-3xl">handyman</span>
           </div>
           <div>
-            <h1 className="font-headline-md text-headline-md text-on-surface">Farming Tools & Equipment</h1>
-            <p className="text-on-surface-variant font-body-md">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">Modern Farm Gear</span>
+            <h1 className="font-headline-md text-2xl md:text-3xl font-extrabold">Farming Tools & Equipment</h1>
+            <p className="text-emerald-100 text-sm">
               {isSeller ? 'Manage your tools and equipment listings' : 'Browse high-quality farming tools from verified sellers'}
             </p>
           </div>
@@ -223,7 +243,7 @@ const Tools = () => {
         {isSeller && (
           <button
             onClick={() => { setEditItem(null); setShowModal(true); }}
-            className="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-bold hover:bg-primary/90 transition-all shadow-sm"
+            className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-full font-bold transition-all shadow-md"
           >
             <span className="material-symbols-outlined text-sm">add</span>
             Add Tool Listing
@@ -248,7 +268,7 @@ const Tools = () => {
           onChange={(e) => setCategory(e.target.value)}
           className="px-4 py-2.5 rounded-lg border border-outline-variant bg-surface text-body-md focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          {TOOLS_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          {dynamicCategories.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
 

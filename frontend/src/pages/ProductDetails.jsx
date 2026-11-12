@@ -192,36 +192,36 @@ const ProductDetails = () => {
             <button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:shadow-lg active:scale-[0.98] transition-all disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-[#166534] to-[#15803d] text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg active:scale-[0.98] transition-all disabled:opacity-50"
             >
               Buy Now
             </button>
           </div>
 
           {/* Seller Info Card */}
-          <div className="mt-xl p-6 bg-surface-container-low rounded-2xl border border-outline-variant">
+          <div className="mt-xl p-6 bg-white rounded-2xl border border-outline-variant/40 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-primary-fixed rounded-xl flex items-center justify-center">
                   <span className="material-symbols-outlined text-primary text-3xl">agriculture</span>
                 </div>
                 <div>
-                  <h3 className="font-title-lg text-title-lg">{product.sellerName || 'Verified Seller'}</h3>
+                  <h3 className="font-title-lg text-title-lg font-bold text-[#143d23]">{product.sellerName || 'Verified Seller'}</h3>
                   <p className="text-label-sm text-on-surface-variant">Certified ExVeg Partner</p>
                 </div>
               </div>
-              <span className="bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase px-2 py-1 rounded tracking-widest">Verified</span>
+              <span className="bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-widest">Verified</span>
             </div>
             <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="text-center p-2 rounded-lg bg-surface">
+              <div className="text-center p-2.5 rounded-xl bg-[#f4f7f2]">
                 <p className="text-label-sm text-on-surface-variant">Rating</p>
                 <p className="font-bold text-primary">{product.rating || '4.5'}/5</p>
               </div>
-              <div className="text-center p-2 rounded-lg bg-surface">
+              <div className="text-center p-2.5 rounded-xl bg-[#f4f7f2]">
                 <p className="text-label-sm text-on-surface-variant">Category</p>
                 <p className="font-bold text-primary text-xs">{product.category || 'General'}</p>
               </div>
-              <div className="text-center p-2 rounded-lg bg-surface">
+              <div className="text-center p-2.5 rounded-xl bg-[#f4f7f2]">
                 <p className="text-label-sm text-on-surface-variant">Stock</p>
                 <p className="font-bold text-primary">{product.stock || 'N/A'}</p>
               </div>

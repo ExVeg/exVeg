@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const SellerRegistrationDocumentUpload = () => {
   const navigate = useNavigate();
@@ -53,8 +54,15 @@ const SellerRegistrationDocumentUpload = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-lg p-8">
+    <div className="min-h-screen bg-[#f8faf5] flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-2xl flex justify-between items-center mb-4">
+        <Link to="/" className="font-headline-md text-xl font-extrabold text-[#166534] flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+          ExVeg
+        </Link>
+        <LanguageSwitcher compact />
+      </div>
+      <div className="w-full max-w-2xl bg-white rounded-2xl border border-outline-variant/40 shadow-xl p-8">
         <header className="mb-6">
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">Verification Uploads</h1>
           <p className="font-body-md text-on-surface-variant">To maintain a secure marketplace, we require verification of your identity and business credentials.</p>

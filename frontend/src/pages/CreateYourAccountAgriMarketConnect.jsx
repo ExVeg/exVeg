@@ -226,7 +226,7 @@ const CreateYourAccountAgriMarketConnect = () => {
   };
 
   return (
-    <main className="flex-grow flex items-center justify-center py-xl px-margin-mobile md:px-margin-desktop min-h-[80vh]">
+    <main className="flex-grow flex items-center justify-center py-xl px-margin-mobile md:px-margin-desktop min-h-[80vh] bg-gradient-to-b from-[#f4f7f2] to-[#f8faf5]">
       <div className="w-full max-w-3xl">
         {/* Progress Indicator */}
         {currentStep < 4 && (
@@ -269,7 +269,7 @@ const CreateYourAccountAgriMarketConnect = () => {
         )}
 
         {/* Form Container */}
-        <div className="bg-surface-container-lowest border border-outline-variant shadow-lg rounded-xl overflow-hidden min-h-[500px] flex flex-col w-full max-w-[48rem] mx-auto">
+        <div className="bg-white border border-outline-variant/40 shadow-xl rounded-2xl overflow-hidden min-h-[500px] flex flex-col w-full max-w-[48rem] mx-auto">
           {error && <div className="bg-error-container text-on-error-container p-3 mx-md mt-md rounded-lg font-label-md text-sm">{error}</div>}
           <form className="p-md md:p-lg flex-grow flex flex-col" onSubmit={(e) => e.preventDefault()}>
             
@@ -589,7 +589,7 @@ const CreateYourAccountAgriMarketConnect = () => {
                 </button>
                 <button 
                   disabled={loading}
-                  className="px-xl py-3 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50" 
+                  className="px-xl py-3 bg-gradient-to-r from-[#166534] to-[#15803d] text-white rounded-full font-bold hover:shadow-lg active:scale-95 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50" 
                   id="next-btn" 
                   type="button"
                   onClick={handleNext}

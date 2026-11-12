@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const SellerDashboardVendorPortal = () => {
   const navigate = useNavigate();
@@ -68,8 +69,8 @@ const SellerDashboardVendorPortal = () => {
     setSubmitError('');
     try {
       const docRef = await addDoc(collection(db, 'products'), {
-        name: newProduct.name,
-        category: newProduct.category,
+        name: newProduct.name.trim(),
+        category: newProduct.category.trim(),
         price: parseFloat(newProduct.price),
         originalPrice: newProduct.originalPrice ? parseFloat(newProduct.originalPrice) : null,
         stock: parseInt(newProduct.stock),
@@ -110,51 +111,57 @@ const SellerDashboardVendorPortal = () => {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F8F9FA]">
+    <div className="flex h-screen overflow-hidden bg-[#f8faf5]">
       {/* SideNavBar */}
-      <aside className="hidden md:flex flex-col h-full w-64 bg-white border-r border-outline-variant shadow-lg py-md transition-all duration-300">
-        <div className="px-md mb-xl">
-          <h1 className="font-headline-md text-headline-md text-primary tracking-tight">Vendor Portal</h1>
-          <p className="font-label-sm text-label-sm text-on-surface-variant opacity-70">ExVeg Professional</p>
+      <aside className="hidden md:flex flex-col h-full w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl py-md transition-all duration-300">
+        <div className="px-md mb-lg pb-4 border-b border-white/10">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
+              <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+            </span>
+            <h1 className="font-headline-md text-xl font-extrabold text-white tracking-tight">Vendor Portal</h1>
+          </div>
+          <p className="font-label-sm text-label-sm text-emerald-200/80">ExVeg Professional</p>
         </div>
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-1 px-2">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-sm px-md py-3 mx-2 rounded-lg transition-all font-label-md text-label-md ${activeTab === item.id ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-high'}`}
+              className={`w-full flex items-center gap-sm px-md py-3 rounded-xl transition-all font-label-md text-label-md ${activeTab === item.id ? 'bg-white/15 text-amber-300 font-bold shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'}`}
             >
               <span className="material-symbols-outlined">{item.icon}</span>
               <span>{item.id}</span>
             </button>
           ))}
         </nav>
-        <div className="px-md mt-auto pt-md border-t border-outline-variant space-y-2">
-          <button onClick={() => setShowAddProduct(true)} className="w-full flex items-center justify-center gap-xs bg-primary text-on-primary py-2 px-4 rounded-lg font-label-md text-label-md shadow-sm hover:opacity-90 transition-opacity">
+        <div className="px-md mt-auto pt-md border-t border-white/10 space-y-2">
+          <button onClick={() => setShowAddProduct(true)} className="w-full flex items-center justify-center gap-xs bg-amber-500 hover:bg-amber-600 text-white py-2.5 px-4 rounded-full font-bold text-label-md shadow-md transition-all">
             <span className="material-symbols-outlined text-sm">add</span>
             New Product
           </button>
           <div className="pt-4 flex items-center gap-sm">
-            <div className="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container overflow-hidden">
+            <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-amber-300 overflow-hidden">
               <span className="material-symbols-outlined">person</span>
             </div>
             <div>
-              <p className="font-label-md text-label-md font-bold truncate w-32">{userData.name || user?.email}</p>
-              <p className="text-[10px] uppercase tracking-wider text-primary font-bold">Verified Seller</p>
+              <p className="font-label-md text-label-md font-bold text-white truncate w-32">{userData.name || user?.email}</p>
+              <p className="text-[10px] uppercase tracking-wider text-amber-300 font-bold">Verified Seller</p>
             </div>
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto relative">
+      <main className="flex-1 overflow-y-auto relative bg-[#f8faf5]">
         {/* TopAppBar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between px-margin-desktop py-4 bg-surface/80 backdrop-blur-md shadow-sm">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-margin-desktop py-4 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm">
           <div className="flex items-center gap-md">
-            <h2 className="font-title-lg text-title-lg text-on-surface">{activeTab}</h2>
+            <h2 className="font-title-lg text-xl font-extrabold text-[#143d23]">{activeTab}</h2>
           </div>
-          <div className="flex items-center gap-md">
-            <Link to="/" className="text-primary text-sm font-bold hover:underline">Go to Home</Link>
+          <div className="flex items-center gap-3 md:gap-md">
+            <LanguageSwitcher compact />
+            <Link to="/" className="text-primary text-sm font-bold border border-primary/30 px-3 py-1.5 rounded-full hover:bg-primary hover:text-white transition-all">Go to Home</Link>
             <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
           </div>
         </header>
@@ -163,10 +170,11 @@ const SellerDashboardVendorPortal = () => {
           {activeTab === 'Dashboard' && (
             <>
               {/* Welcome Banner */}
-              <div className="relative overflow-hidden rounded-xl bg-primary-container p-lg text-on-primary-container flex flex-col md:flex-row justify-between items-center mb-6">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#143d23] to-[#166534] p-lg text-white flex flex-col md:flex-row justify-between items-center mb-6 shadow-md">
                 <div className="z-10 text-center md:text-left">
-                  <h3 className="font-headline-lg text-headline-lg text-white mb-2">Welcome back, {userData.name}!</h3>
-                  <p className="font-body-lg text-body-lg opacity-90 text-white">Manage your inventory and orders from your personal dashboard.</p>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">Seller Workspace</span>
+                  <h3 className="font-headline-lg text-2xl md:text-3xl font-extrabold text-white mb-2">Welcome back, {userData.name}!</h3>
+                  <p className="font-body-lg text-emerald-100">Manage your inventory and orders from your personal dashboard.</p>
                 </div>
               </div>
               
@@ -256,10 +264,10 @@ const SellerDashboardVendorPortal = () => {
                         <tr key={p.id} className="hover:bg-surface-container-low">
                           <td className="px-md py-4 font-bold">{p.name}</td>
                           <td className="px-md py-4">{p.category}</td>
-                          <td className="px-md py-4">${p.price}</td>
+                          <td className="px-md py-4 font-semibold text-primary">₹{Number(p.price || 0).toFixed(2)}</td>
                           <td className="px-md py-4">{p.stock} units</td>
                           <td className="px-md py-4">
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${p.status === 'Approved' ? 'bg-tertiary/20 text-tertiary' : 'bg-error/20 text-error'}`}>{p.status || 'Pending'}</span>
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${p.status === 'Approved' ? 'bg-secondary-container text-on-secondary-container' : 'bg-tertiary-fixed text-on-tertiary-fixed'}`}>{p.status || 'Pending'}</span>
                           </td>
                         </tr>
                       ))}
@@ -270,11 +278,58 @@ const SellerDashboardVendorPortal = () => {
             </div>
           )}
 
-          {(activeTab === 'Orders' || activeTab === 'Analytics' || activeTab === 'Settings') && (
+          {activeTab === 'Orders' && (
+            <div className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+              <div className="p-md border-b border-outline-variant">
+                <h4 className="font-title-lg text-title-lg">Customer Orders</h4>
+              </div>
+              {orders.length === 0 ? (
+                <div className="p-8 text-center text-on-surface-variant">You have no orders yet.</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead className="bg-surface-container-low text-on-surface-variant font-label-sm uppercase">
+                      <tr>
+                        <th className="px-md py-4">Order ID</th>
+                        <th className="px-md py-4">Buyer</th>
+                        <th className="px-md py-4">Delivery</th>
+                        <th className="px-md py-4">Amount</th>
+                        <th className="px-md py-4">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-outline-variant">
+                      {orders.map(o => (
+                        <tr key={o.id} className="hover:bg-surface-container-low">
+                          <td className="px-md py-4 font-mono text-xs">{o.id.slice(0, 10)}...</td>
+                          <td className="px-md py-4 font-bold">{o.buyerName || o.email}</td>
+                          <td className="px-md py-4 text-sm text-on-surface-variant">{o.deliveryDate || 'Standard'}</td>
+                          <td className="px-md py-4 font-bold text-primary">₹{Number(o.totalAmount || 0).toFixed(2)}</td>
+                          <td className="px-md py-4">
+                            <span className="px-2 py-1 rounded text-xs font-bold bg-secondary-container text-on-secondary-container">{o.status || 'Placed'}</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {(activeTab === 'Analytics' || activeTab === 'Settings') && (
             <div className="bg-white p-8 rounded-xl shadow-sm border border-outline-variant text-center text-on-surface-variant">
-              <span className="material-symbols-outlined text-4xl mb-2 text-outline">construction</span>
-              <p className="font-bold text-lg">{activeTab} coming soon!</p>
-              <p>This section is currently under development.</p>
+              <span className="material-symbols-outlined text-4xl mb-2 text-primary">insights</span>
+              <p className="font-bold text-lg text-on-surface">{activeTab}</p>
+              <p className="text-sm mt-1">
+                {activeTab === 'Analytics'
+                  ? `You have ${products.length} listed product(s), ${orders.length} order(s), and ₹${orders.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0).toLocaleString('en-IN')} total revenue.`
+                  : 'Manage your merchant account and verification profile.'}
+              </p>
+              {activeTab === 'Analytics' && (
+                <Link to="/analytics" className="inline-block mt-4 bg-primary text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-primary/90">
+                  Open Detailed Analytics
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -291,22 +346,52 @@ const SellerDashboardVendorPortal = () => {
                 <input required type="text" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. Organic Tomatoes" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Category</label>
-                <select required value={newProduct.category} onChange={e => setNewProduct({...newProduct, category: e.target.value})} className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none">
-                  <option value="">Select Category</option>
-                  <option value="Vegetables">Vegetables</option>
-                  <option value="Fruits">Fruits</option>
-                  <option value="Seeds & Bulbs">Seeds & Bulbs</option>
-                  <option value="Tools">Tools</option>
-                </select>
+                <label className="block text-sm font-medium mb-1">Category *</label>
+                <input
+                  required
+                  type="text"
+                  list="seller-product-categories"
+                  value={newProduct.category}
+                  onChange={e => setNewProduct({...newProduct, category: e.target.value})}
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none"
+                  placeholder="Enter or choose category (e.g. Seeds & Bulbs, Vegetables, Tools)"
+                />
+                <datalist id="seller-product-categories">
+                  <option value="Seeds & Bulbs" />
+                  <option value="Vegetables" />
+                  <option value="Fruits" />
+                  <option value="Organic Fertilizers" />
+                  <option value="Irrigation Tools" />
+                  <option value="Pesticides" />
+                  <option value="Nursery Plants" />
+                  <option value="Tools" />
+                  <option value="Garden Decor" />
+                  <option value="Herbs" />
+                </datalist>
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {['Seeds & Bulbs', 'Vegetables', 'Fruits', 'Organic Fertilizers', 'Irrigation Tools', 'Tools'].map(cat => (
+                    <button
+                      type="button"
+                      key={cat}
+                      onClick={() => setNewProduct({ ...newProduct, category: cat })}
+                      className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                        newProduct.category === cat
+                          ? 'bg-primary text-white border-primary font-bold'
+                          : 'bg-surface-container text-on-surface-variant border-outline-variant hover:border-primary'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Sale Price ($)</label>
+                  <label className="block text-sm font-medium mb-1">Sale Price (₹)</label>
                   <input required type="number" step="0.01" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Original Price ($) (Optional)</label>
+                  <label className="block text-sm font-medium mb-1">Original Price (₹) (Optional)</label>
                   <input type="number" step="0.01" value={newProduct.originalPrice || ''} onChange={e => setNewProduct({...newProduct, originalPrice: e.target.value})} className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none" placeholder="0.00" />
                 </div>
               </div>

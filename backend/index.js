@@ -147,6 +147,113 @@ app.post('/api/notify/product-approved', async (req, res) => {
   }
 });
 
+const translateCache = new Map();
+
+async function translateSingleText(text, targetLang) {
+  const key = `${targetLang}::${text}`;
+  if (translateCache.has(key)) return translateCache.get(key);
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(text)}`;
+    const response = await fetch(url);
+    if (!response.ok) return text;
+    const data = await response.json();
+    const translated = Array.isArray(data?.[0])
+      ? data[0].map((part) => part?.[0] || '').join('')
+      : text;
+    const finalStr = translated || text;
+    translateCache.set(key, finalStr);
+    return finalStr;
+  } catch {
+    return text;
+  }
+}
+
+app.post('/api/translate', async (req, res) => {
+  try {
+    const { texts, targetLang } = req.body || {};
+    if (!targetLang || targetLang === 'en' || !Array.isArray(texts) || texts.length === 0) {
+      return res.status(200).json({ translations: {} });
+    }
+
+    const uniqueTexts = [...new Set(
+      texts.filter((t) => typeof t === 'string' && t.trim().length > 0).slice(0, 100)
+    )];
+
+    const translations = {};
+    const uncached = [];
+
+    for (const t of uniqueTexts) {
+      const key = `${targetLang}::${t}`;
+      if (translateCache.has(key)) {
+        translations[t] = translateCache.get(key);
+      } else {
+        uncached.push(t);
+      }
+    }
+
+    if (uncached.length > 0) {
+      // Translate in small chunks using a delimiter for speed; fall back per-item if needed
+      const SEP = '\n[[[EXVEG_SEP]]]\n';
+      const chunks = [];
+      let current = [];
+      let currentLen = 0;
+
+      for (const item of uncached) {
+        if (currentLen + item.length > 1400 && current.length > 0) {
+          chunks.push(current);
+          current = [item];
+          currentLen = item.length;
+        } else {
+          current.push(item);
+          currentLen += item.length + SEP.length;
+        }
+      }
+      if (current.length > 0) chunks.push(current);
+
+      for (const chunk of chunks) {
+        if (chunk.length === 1) {
+          translations[chunk[0]] = await translateSingleText(chunk[0], targetLang);
+          continue;
+        }
+        try {
+          const joined = chunk.join(SEP);
+          const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(joined)}`;
+          const response = await fetch(url);
+          if (!response.ok) throw new Error('Translate HTTP error');
+          const data = await response.json();
+          const fullTranslated = Array.isArray(data?.[0])
+            ? data[0].map((part) => part?.[0] || '').join('')
+            : '';
+          const parts = fullTranslated.split(/\s*\[\[\[EXVEG_SEP\]\]\]\s*/);
+
+          if (parts.length === chunk.length) {
+            chunk.forEach((orig, idx) => {
+              const val = (parts[idx] || orig).trim() || orig;
+              translateCache.set(`${targetLang}::${orig}`, val);
+              translations[orig] = val;
+            });
+          } else {
+            const results = await Promise.all(chunk.map((orig) => translateSingleText(orig, targetLang)));
+            chunk.forEach((orig, idx) => {
+              translations[orig] = results[idx];
+            });
+          }
+        } catch {
+          const results = await Promise.all(chunk.map((orig) => translateSingleText(orig, targetLang)));
+          chunk.forEach((orig, idx) => {
+            translations[orig] = results[idx];
+          });
+        }
+      }
+    }
+
+    res.status(200).json({ translations });
+  } catch (error) {
+    console.warn('Translation endpoint note:', error.message);
+    res.status(200).json({ translations: {} });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 if (require.main === module) {
   app.listen(PORT, () => {

@@ -35,6 +35,11 @@ function App() {
           <Route path="nursery" element={<Nursery />} />
           <Route path="tools" element={<Tools />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="buyer-dashboard" element={
+            <ProtectedRoute roles={['Buyer', 'Seller', 'Admin']}>
+              <Analytics />
+            </ProtectedRoute>
+          } />
           <Route path="notifications" element={<Notifications />} />
           <Route path="cart" element={<Cart />} />
         </Route>

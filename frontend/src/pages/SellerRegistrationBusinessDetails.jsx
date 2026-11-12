@@ -1,26 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const SellerRegistrationBusinessDetails = () => {
   return (
     <>
       
 {/* TopNavBar */}
-<header className="fixed top-0 w-full z-50 bg-white/80 dark:bg-surface-container/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm glass-header">
+<header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm glass-header">
 <div className="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop w-full">
-<div className="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">ExVeg</div>
-<div className="hidden md:flex gap-8 items-center">
-<a className="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Home</a>
-<a className="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Markets</a>
-<a className="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Analytics</a>
-<button className="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md active:scale-95 transition-transform">Log In</button>
+<Link to="/" className="font-headline-md text-headline-md font-extrabold text-[#166534] flex items-center gap-2">
+<span className="material-symbols-outlined text-primary text-2xl" style={{"fontVariationSettings":"'FILL' 1"}}>spa</span>
+ExVeg
+</Link>
+<div className="flex gap-4 md:gap-6 items-center">
+<LanguageSwitcher compact />
+<Link className="hidden md:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" to="/">Home</Link>
+<Link className="hidden md:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" to="/products">Markets</Link>
+<Link className="hidden md:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" to="/analytics">Analytics</Link>
+<Link to="/login" className="bg-gradient-to-r from-[#166534] to-[#15803d] text-white px-5 py-1.5 rounded-full font-bold text-sm active:scale-95 transition-transform">Log In</Link>
 </div>
-<button className="md:hidden text-primary">
-<span className="material-symbols-outlined">menu</span>
-</button>
 </div>
 </header>
-<main className="pt-24 pb-16 min-h-screen flex flex-col items-center">
+<main className="pt-24 pb-16 min-h-screen flex flex-col items-center bg-[#f8faf5]">
 {/* Progress Indicator */}
 <div className="w-full max-w-4xl px-margin-mobile mb-md">
 <div className="relative flex justify-between items-center mb-10">

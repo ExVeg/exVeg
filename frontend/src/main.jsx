@@ -5,13 +5,16 @@ import './index.css'
 import App from './App.jsx'
 import store from './store/store.js'
 import { ToastProvider } from './context/ToastContext.jsx'
+import { LanguageProvider } from './context/LanguageContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <ToastProvider>
-        <App />
-      </ToastProvider>
+      <LanguageProvider>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </LanguageProvider>
     </Provider>
   </StrictMode>,
 )

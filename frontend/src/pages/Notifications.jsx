@@ -51,26 +51,28 @@ const Notifications = () => {
   if (!user || notifications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
-        <div className="w-24 h-24 bg-primary-fixed rounded-full flex items-center justify-center mb-6">
-          <span className="material-symbols-outlined text-primary text-5xl" data-icon="notifications">notifications</span>
+        <div className="bg-white border border-outline-variant/40 rounded-2xl shadow-sm p-10 text-center max-w-lg w-full">
+          <div className="w-20 h-20 bg-primary-fixed rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <span className="material-symbols-outlined text-primary text-4xl" data-icon="notifications">notifications</span>
+          </div>
+          <h1 className="text-3xl font-headline-lg font-extrabold text-[#143d23] mb-3">Notifications</h1>
+          <p className="text-on-surface-variant text-base">
+            {user ? 'You have no new notifications at the moment.' : 'Please sign in to view your notifications.'}
+          </p>
         </div>
-        <h1 className="text-4xl font-headline-lg text-primary mb-4">Notifications</h1>
-        <p className="text-on-surface-variant text-center max-w-lg text-lg">
-          {user ? 'You have no new notifications at the moment.' : 'Please sign in to view your notifications.'}
-        </p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-primary-fixed rounded-xl flex items-center justify-center">
-          <span className="material-symbols-outlined text-primary text-2xl">notifications</span>
+    <div className="max-w-4xl mx-auto px-4 py-10">
+      <div className="bg-gradient-to-r from-[#143d23] to-[#166534] text-white rounded-2xl p-6 mb-6 flex items-center gap-4 shadow-md">
+        <div className="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
+          <span className="material-symbols-outlined text-amber-300 text-2xl">notifications</span>
         </div>
         <div>
-          <h1 className="text-2xl font-headline-md text-on-surface font-bold">Notifications</h1>
-          <p className="text-sm text-on-surface-variant">Account updates, product approvals, and order alerts</p>
+          <h1 className="text-2xl font-headline-md font-extrabold">Notifications</h1>
+          <p className="text-sm text-emerald-100">Account updates, product approvals, and order alerts</p>
         </div>
       </div>
 
@@ -79,10 +81,10 @@ const Notifications = () => {
           <div
             key={n.id}
             onClick={() => !n.read && markAsRead(n.id)}
-            className={`p-4 rounded-xl border transition-all cursor-pointer ${
+            className={`p-5 rounded-2xl border transition-all cursor-pointer ${
               n.read
-                ? 'bg-surface-container-lowest border-outline-variant/60'
-                : 'bg-primary-container/20 border-primary/40 shadow-sm'
+                ? 'bg-white border-outline-variant/40 hover:shadow-sm'
+                : 'bg-[#f4f7f2] border-primary/40 shadow-sm hover:shadow-md'
             }`}
           >
             <div className="flex items-start justify-between gap-4">

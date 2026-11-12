@@ -123,18 +123,27 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center min-h-[70vh] p-4">
-        <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-lg border border-outline-variant/30 w-full max-w-[32rem]">
-          <h2 className="text-3xl font-display-lg text-center text-primary mb-6">Welcome Back</h2>
-          {error && <div className="bg-error-container text-on-error-container p-3 rounded-lg mb-4 text-sm font-label-md">{error}</div>}
+      <div className="flex justify-center items-center min-h-[75vh] px-4 py-10 bg-gradient-to-b from-[#f4f7f2] to-[#f8faf5]">
+        <div className="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-outline-variant/40 w-full max-w-[30rem]">
+          <div className="flex flex-col items-center mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#166534] to-[#2e7d32] flex items-center justify-center shadow-md mb-3">
+              <span className="material-symbols-outlined text-white text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+            </div>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-3 py-0.5 rounded-full mb-2">
+              ExVeg Member Portal
+            </span>
+            <h2 className="text-3xl font-display-lg font-extrabold text-center text-[#143d23]">Welcome Back</h2>
+            <p className="text-sm text-on-surface-variant mt-1">Sign in to manage orders, products, and analytics</p>
+          </div>
+          {error && <div className="bg-error-container text-on-error-container p-3 rounded-xl mb-4 text-sm font-label-md">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block font-label-md text-on-surface-variant mb-1">Login as</label>
+              <label className="block font-label-md text-on-surface-variant mb-1.5">Login as</label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface font-body-md"
+                className="w-full px-4 py-2.5 border border-outline-variant rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-[#f8faf5] text-on-surface font-body-md"
               >
                 <option value="Buyer">Buyer</option>
                 <option value="Seller">Seller</option>
@@ -142,26 +151,26 @@ const Login = () => {
               </select>
             </div>
             <div>
-              <label className="block font-label-md text-on-surface-variant mb-1">Email</label>
+              <label className="block font-label-md text-on-surface-variant mb-1.5">Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2.5 border border-outline-variant rounded-xl bg-[#f8faf5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="you@example.com"
               />
             </div>
             <div>
-              <label className="block font-label-md text-on-surface-variant mb-1">Password</label>
+              <label className="block font-label-md text-on-surface-variant mb-1.5">Password</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2.5 border border-outline-variant rounded-xl bg-[#f8faf5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="••••••••"
               />
             </div>
@@ -177,13 +186,13 @@ const Login = () => {
             <button
               disabled={loading}
               type="submit"
-              className="w-full bg-primary text-on-primary font-bold py-3 rounded-lg hover:bg-primary/90 transition shadow-md mt-4 disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-[#166534] to-[#15803d] text-white font-bold py-3.5 rounded-xl hover:shadow-lg active:scale-[0.99] transition-all mt-4 disabled:opacity-50"
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </button>
           </form>
-          <div className="mt-6 text-center text-sm text-on-surface-variant">
-            Don't have an account? <Link to="/register" className="text-primary font-semibold hover:underline">Register here</Link>
+          <div className="mt-6 pt-5 border-t border-outline-variant/40 text-center text-sm text-on-surface-variant">
+            Don't have an account? <Link to="/register" className="text-primary font-bold hover:underline">Register here</Link>
           </div>
         </div>
       </div>

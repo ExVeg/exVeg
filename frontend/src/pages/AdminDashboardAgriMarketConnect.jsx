@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { getApiBaseUrl } from '../utils/api';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const AdminDashboardAgriMarketConnect = () => {
   const navigate = useNavigate();
@@ -342,28 +343,31 @@ const AdminDashboardAgriMarketConnect = () => {
       )}
 
       {/* Sidebar Navigation */}
-      <aside className="fixed left-0 top-0 h-full z-40 w-64 bg-surface border-r border-outline-variant shadow-sm flex flex-col">
-        <div className="p-6">
-          <Link to="/" className="text-title-lg font-headline-md font-bold text-primary flex items-center gap-2">
+      <aside className="fixed left-0 top-0 h-full z-40 w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl flex flex-col">
+        <div className="p-6 border-b border-white/10">
+          <Link to="/" className="text-xl font-headline-md font-extrabold text-white flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
+              <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+            </span>
             ExVeg
           </Link>
-          <p className="font-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-            <span className="material-symbols-outlined text-[14px] text-primary">admin_panel_settings</span>
+          <p className="font-label-sm text-emerald-200/80 flex items-center gap-1 mt-1.5">
+            <span className="material-symbols-outlined text-[14px] text-amber-300">admin_panel_settings</span>
             Admin Console
           </p>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto">
           <button
             onClick={() => setActiveTab('pending')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-              activeTab === 'pending' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-high'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+              activeTab === 'pending' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
           >
             <span className="material-symbols-outlined">pending_actions</span>
             <span className="font-label-md">Pending Approvals</span>
             {totalPendingQueue > 0 && (
-              <span className="ml-auto bg-error text-white text-xs font-black px-2 py-0.5 rounded-full animate-pulse">
+              <span className="ml-auto bg-amber-500 text-white text-xs font-black px-2 py-0.5 rounded-full animate-pulse">
                 {totalPendingQueue}
               </span>
             )}
@@ -371,25 +375,25 @@ const AdminDashboardAgriMarketConnect = () => {
 
           <button
             onClick={() => setActiveTab('approved')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-              activeTab === 'approved' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-high'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+              activeTab === 'approved' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
           >
             <span className="material-symbols-outlined">storefront</span>
             <span className="font-label-md">Live Listings</span>
-            <span className="ml-auto bg-primary-container text-on-primary-container text-xs font-black px-1.5 py-0.5 rounded-full">{approvedProducts.length}</span>
+            <span className="ml-auto bg-white/20 text-white text-xs font-black px-2 py-0.5 rounded-full">{approvedProducts.length}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('sellers')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-              activeTab === 'sellers' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-high'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+              activeTab === 'sellers' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
           >
             <span className="material-symbols-outlined">verified_user</span>
             <span className="font-label-md">Sellers ({sellers.length})</span>
             {pendingSellersList.length > 0 && (
-              <span className="ml-auto bg-tertiary text-white text-xs font-black px-1.5 py-0.5 rounded-full">
+              <span className="ml-auto bg-amber-500 text-white text-xs font-black px-2 py-0.5 rounded-full">
                 {pendingSellersList.length}
               </span>
             )}
@@ -397,8 +401,8 @@ const AdminDashboardAgriMarketConnect = () => {
 
           <button
             onClick={() => setActiveTab('orders')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-              activeTab === 'orders' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-high'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+              activeTab === 'orders' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
           >
             <span className="material-symbols-outlined">receipt_long</span>
@@ -407,25 +411,25 @@ const AdminDashboardAgriMarketConnect = () => {
 
           <button
             onClick={() => setActiveTab('users')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-              activeTab === 'users' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-high'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+              activeTab === 'users' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
           >
             <span className="material-symbols-outlined">people</span>
             <span className="font-label-md">Users ({usersList.length})</span>
           </button>
 
-          <div className="pt-2 border-t border-outline-variant space-y-1">
+          <div className="pt-3 border-t border-white/10 space-y-1">
             <Link
               to="/analytics"
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium text-on-surface-variant hover:bg-surface-container-high transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-emerald-100/80 hover:bg-white/10 hover:text-white transition-all"
             >
               <span className="material-symbols-outlined text-[20px]">bar_chart</span>
               <span className="font-label-md">Platform Analytics</span>
             </Link>
             <Link
               to="/"
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium text-on-surface-variant hover:bg-surface-container-high transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-emerald-100/80 hover:bg-white/10 hover:text-white transition-all"
             >
               <span className="material-symbols-outlined text-[20px]">home</span>
               <span className="font-label-md">View Storefront</span>
@@ -434,21 +438,21 @@ const AdminDashboardAgriMarketConnect = () => {
         </nav>
 
         {/* Dynamic Admin Profile & Logout */}
-        <div className="p-4 border-t border-outline-variant bg-surface-container-lowest">
+        <div className="p-4 border-t border-white/10 bg-black/15">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-amber-400 text-[#143d23] flex items-center justify-center font-black text-sm shadow-sm flex-shrink-0">
               {adminInitial}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-bold text-on-surface truncate" title={adminEmail}>{adminEmail}</p>
-              <span className="text-[10px] uppercase tracking-wider bg-primary-container text-on-primary-container px-1.5 py-0.5 rounded font-black">
+              <p className="text-sm font-bold text-white truncate" title={adminEmail}>{adminEmail}</p>
+              <span className="text-[10px] uppercase tracking-wider bg-white/15 text-amber-300 px-1.5 py-0.5 rounded font-black">
                 Administrator
               </span>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 p-2 rounded-lg text-error hover:bg-error-container/30 transition-colors text-sm font-bold"
+            className="w-full flex items-center justify-center gap-2 p-2 rounded-xl text-rose-200 hover:bg-rose-500/20 transition-colors text-sm font-bold"
           >
             <span className="material-symbols-outlined text-[18px]">logout</span>
             Sign Out
@@ -457,9 +461,9 @@ const AdminDashboardAgriMarketConnect = () => {
       </aside>
 
       {/* Top Header */}
-      <header className="fixed top-0 right-0 left-64 h-16 flex justify-between items-center px-8 z-30 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+      <header className="fixed top-0 right-0 left-64 h-16 flex justify-between items-center px-6 md:px-8 z-30 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm">
         <div className="flex items-center gap-4">
-          <h2 className="font-headline-md text-headline-md text-on-surface capitalize">
+          <h2 className="font-headline-md text-xl font-bold text-[#143d23] capitalize">
             {activeTab === 'pending' && 'Pending Approvals Queue'}
             {activeTab === 'approved' && 'Live Marketplace Listings'}
             {activeTab === 'sellers' && 'All Sellers & Verification'}
@@ -467,22 +471,23 @@ const AdminDashboardAgriMarketConnect = () => {
             {activeTab === 'users' && 'System Users Directory'}
           </h2>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="relative w-64">
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher compact />
+          <div className="relative w-56 hidden lg:block">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search anything..."
-              className="w-full pl-9 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full pl-9 pr-4 py-1.5 bg-[#f4f7f2] border border-outline-variant rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
           <button onClick={fetchAllData} className="text-primary hover:underline text-sm font-semibold flex items-center gap-1">
             <span className="material-symbols-outlined text-[18px]">refresh</span>
             Refresh
           </button>
-          <Link to="/" className="text-primary text-sm font-bold hover:underline flex items-center gap-1 border border-primary/30 px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-all">
+          <Link to="/" className="text-primary text-sm font-bold hover:bg-primary hover:text-white flex items-center gap-1 border border-primary/30 px-3 py-1.5 rounded-full transition-all">
             <span className="material-symbols-outlined text-[16px]">storefront</span>
             Storefront
           </Link>
@@ -490,7 +495,7 @@ const AdminDashboardAgriMarketConnect = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="ml-64 mt-16 p-8 min-h-screen bg-background">
+      <main className="ml-64 mt-16 p-8 min-h-screen bg-[#f8faf5]">
         {/* Dynamic KPI Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-8">
           <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex items-center gap-4">
