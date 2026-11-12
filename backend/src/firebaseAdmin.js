@@ -12,8 +12,9 @@ function initAdmin() {
     return;
   }
 
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY
-    ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+  const rawKey = process.env.FIREBASE_PRIVATE_KEY;
+  const privateKey = rawKey
+    ? rawKey.replace(/^["']|["']$/g, '').replace(/\\n/g, '\n')
     : undefined;
 
   if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !privateKey) {

@@ -7,7 +7,7 @@ const {
   sendSellerApprovalEmail,
   sendProductApprovalEmail
 } = require('./src/checkoutMail');
-const { verifyIdToken, getAdminDb } = require('./src/firebaseAdmin');
+const firebaseAdmin = require('./src/firebaseAdmin');
 const { generateUploadSignature, deleteCloudinaryImage, validateOwnership } = require('./src/cloudinaryConfig');
 
 dotenv.config();
@@ -263,7 +263,10 @@ async function authenticate(req) {
     throw Object.assign(new Error('Missing or invalid Authorization header.'), { status: 401 });
   }
   const token = authHeader.slice(7);
-  const decoded = await verifyIdToken(token);
+  if (typeof firebaseAdmin.verifyIdToken !== 'function') {
+    throw new Error(`firebaseAdmin.verifyIdToken is ${typeof firebaseAdmin.verifyIdToken} (keys: ${Object.keys(firebaseAdmin).join(',')})`);
+  }
+  const decoded = await firebaseAdmin.verifyIdToken(token);
   return decoded; // { uid, email, ... }
 }
 
@@ -275,7 +278,7 @@ app.post('/api/uploads/signature', async (req, res) => {
     const uid = decoded.uid;
 
     // Fetch user role from Firestore (never trust frontend)
-    const adminDb = getAdminDb();
+    const adminDb = firebaseAdmin.getAdminDb();
     const userDoc = await adminDb.collection('users').doc(uid).get();
     if (!userDoc.exists) {
       return res.status(403).json({ success: false, message: 'User not found in Firestore.' });
@@ -317,7 +320,7 @@ app.delete('/api/uploads/image', async (req, res) => {
     }
 
     // Get user role from Firestore
-    const adminDb = getAdminDb();
+    const adminDb = firebaseAdmin.getAdminDb();
     const userDoc = await adminDb.collection('users').doc(uid).get();
     const role = userDoc.exists ? (userDoc.data().role || '') : '';
 
