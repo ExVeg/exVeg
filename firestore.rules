@@ -12,66 +12,75 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
-    // Fetch the caller's role from /users/{uid}
+    function hasProfile() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    // Fetch the caller's role from /users/{uid} safely
     function getRole() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+      return hasProfile()
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : '';
     }
 
     function isAdmin() {
-      return isSignedIn() && getRole() == 'Admin';
+      return isSignedIn() && getRole() in ['Admin', 'admin'];
     }
 
     function isSeller() {
-      return isSignedIn() && getRole() == 'Seller';
+      return isSignedIn() && getRole() in ['Seller', 'seller'];
     }
 
     function isBuyer() {
-      return isSignedIn() && getRole() == 'Buyer';
+      return isSignedIn() && getRole() in ['Buyer', 'buyer'];
     }
 
     function isSellerOrAdmin() {
-      return isSignedIn() && (getRole() == 'Seller' || getRole() == 'Admin');
+      return isAdmin() || isSeller();
     }
 
     // ─── /users/{uid} ─────────────────────────────────────────────────────
-    // A user can read & write their own profile; Admins can read all profiles.
+    // A user can read & manage their own profile (without escalating role/approval).
+    // Admins can read, approve/reject, update, and delete any user profile.
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
-      allow create: if isSignedIn() && isOwner(uid);
-      allow update: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid)
+        && (!('role' in request.resource.data)
+            || request.resource.data.role in ['Buyer', 'Seller', 'buyer', 'seller']);
+      allow update: if isAdmin()
+        || (isOwner(uid)
+            && (!('role' in request.resource.data)
+                || request.resource.data.role == resource.data.role)
+            && (!('verified' in request.resource.data)
+                || request.resource.data.verified == resource.data.verified)
+            && (!('status' in request.resource.data)
+                || request.resource.data.status == resource.data.status));
       allow delete: if isAdmin();
     }
 
     // ─── /products/{productId} ────────────────────────────────────────────
-    // Buyers and guests can read Approved products.
-    // Sellers can read their own products (any status).
-    // Sellers can create products (must set their own sellerId).
-    // Sellers can update their own products (not the status field).
-    // Admins can read/write all products (including approval / status changes).
     match /products/{productId} {
       allow read: if
-        // Public read for approved products
         resource.data.status == 'Approved'
-        // Seller can read their own listings
         || (isSignedIn() && resource.data.sellerId == request.auth.uid)
-        // Admin can read everything
         || isAdmin();
 
       allow create: if
-        isSeller()
+        isSellerOrAdmin()
         && request.resource.data.sellerId == request.auth.uid
-        && request.resource.data.status == 'Pending'; // Sellers cannot self-approve
+        && (isAdmin() || request.resource.data.status == 'Pending');
 
       allow update: if
-        // Seller can update own product but cannot change status themselves
         (isSeller()
           && resource.data.sellerId == request.auth.uid
           && request.resource.data.sellerId == request.auth.uid
-          && request.resource.data.status == resource.data.status) // status unchanged
-        // Admin can update anything (approve, reject, etc.)
+          && request.resource.data.status == resource.data.status)
         || isAdmin();
 
-      allow delete: if isAdmin();
+      allow delete: if
+        (isSeller() && resource.data.sellerId == request.auth.uid)
+        || isAdmin();
     }
 
     // ─── /nursery/{listingId} ─────────────────────────────────────────────
@@ -82,9 +91,9 @@ service cloud.firestore {
         || isAdmin();
 
       allow create: if
-        isSeller()
+        isSellerOrAdmin()
         && request.resource.data.sellerId == request.auth.uid
-        && request.resource.data.status == 'Pending';
+        && (isAdmin() || request.resource.data.status == 'Pending');
 
       allow update: if
         (isSeller()
@@ -106,9 +115,9 @@ service cloud.firestore {
         || isAdmin();
 
       allow create: if
-        isSeller()
+        isSellerOrAdmin()
         && request.resource.data.sellerId == request.auth.uid
-        && request.resource.data.status == 'Pending';
+        && (isAdmin() || request.resource.data.status == 'Pending');
 
       allow update: if
         (isSeller()
@@ -123,22 +132,20 @@ service cloud.firestore {
     }
 
     // ─── /orders/{orderId} ────────────────────────────────────────────────
-    // Buyers can create orders and read their own orders.
-    // Sellers can read orders where their sellerId matches.
-    // Admins have full access.
     match /orders/{orderId} {
       allow read: if
         isAdmin()
         || (isSignedIn() && resource.data.buyerId == request.auth.uid)
-        || (isSignedIn() && resource.data.sellerId == request.auth.uid);
+        || (isSignedIn() && resource.data.sellerId == request.auth.uid)
+        || (isSignedIn() && 'sellerIds' in resource.data && request.auth.uid in resource.data.sellerIds);
 
       allow create: if
         isSignedIn()
         && request.resource.data.buyerId == request.auth.uid;
 
       allow update: if
-        // Seller can update status of their own orders
-        (isSeller() && resource.data.sellerId == request.auth.uid)
+        (isSeller() && (resource.data.sellerId == request.auth.uid
+          || ('sellerIds' in resource.data && request.auth.uid in resource.data.sellerIds)))
         || isAdmin();
 
       allow delete: if isAdmin();
@@ -147,17 +154,18 @@ service cloud.firestore {
     // ─── /notifications/{notifId} ─────────────────────────────────────────
     match /notifications/{notifId} {
       allow read: if
-        isSignedIn() && resource.data.userId == request.auth.uid;
-      allow create: if isAdmin(); // Only server/admin creates notifications
+        isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if
+        isSignedIn() && request.resource.data.userId is string;
       allow update: if
-        isSignedIn() && resource.data.userId == request.auth.uid; // Mark as read
+        isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow delete: if
-        isSignedIn() && resource.data.userId == request.auth.uid;
+        isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
     }
 
     // ─── /cart/{cartId} ───────────────────────────────────────────────────
     match /cart/{cartId} {
-      allow read, write: if
+      allow read, update, delete: if
         isSignedIn() && resource.data.userId == request.auth.uid;
       allow create: if
         isSignedIn() && request.resource.data.userId == request.auth.uid;
@@ -169,4 +177,3 @@ service cloud.firestore {
     }
   }
 }
-

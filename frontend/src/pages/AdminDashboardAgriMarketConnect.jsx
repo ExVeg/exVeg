@@ -7,6 +7,7 @@ import {
   doc, updateDoc, deleteDoc, addDoc
 } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import { getApiBaseUrl } from '../utils/api';
 
 const AdminDashboardAgriMarketConnect = () => {
   const navigate = useNavigate();
@@ -47,15 +48,29 @@ const AdminDashboardAgriMarketConnect = () => {
 
   const fetchAllData = async () => {
     setLoading(true);
+    const failedCollections = [];
+
+    const safeGet = async (label, promise) => {
+      try {
+        return await promise;
+      } catch (err) {
+        console.warn(`Firestore query skipped/failed for ${label}:`, err.code || err.message);
+        failedCollections.push(label);
+        return { docs: [] };
+      }
+    };
+
     try {
-      // 1. Fetch Products from products, nursery, and tools collections
-      const [prodPending, prodApproved, nurPending, nurApproved, toolPending, toolApproved] = await Promise.all([
-        getDocs(query(collection(db, 'products'), where('status', '==', 'Pending'))),
-        getDocs(query(collection(db, 'products'), where('status', '==', 'Approved'))),
-        getDocs(query(collection(db, 'nursery'), where('status', '==', 'Pending'))),
-        getDocs(query(collection(db, 'nursery'), where('status', '==', 'Approved'))),
-        getDocs(query(collection(db, 'tools'), where('status', '==', 'Pending'))),
-        getDocs(query(collection(db, 'tools'), where('status', '==', 'Approved'))),
+      // 1. Fetch Products from products, nursery, and tools independently
+      const [prodPending, prodApproved, nurPending, nurApproved, toolPending, toolApproved, usersSnap, ordersSnap] = await Promise.all([
+        safeGet('products (pending)', getDocs(query(collection(db, 'products'), where('status', '==', 'Pending')))),
+        safeGet('products (approved)', getDocs(query(collection(db, 'products'), where('status', '==', 'Approved')))),
+        safeGet('nursery (pending)', getDocs(query(collection(db, 'nursery'), where('status', '==', 'Pending')))),
+        safeGet('nursery (approved)', getDocs(query(collection(db, 'nursery'), where('status', '==', 'Approved')))),
+        safeGet('tools (pending)', getDocs(query(collection(db, 'tools'), where('status', '==', 'Pending')))),
+        safeGet('tools (approved)', getDocs(query(collection(db, 'tools'), where('status', '==', 'Approved')))),
+        safeGet('users', getDocs(collection(db, 'users'))),
+        safeGet('orders', getDocs(collection(db, 'orders'))),
       ]);
 
       const pending = [
@@ -73,19 +88,18 @@ const AdminDashboardAgriMarketConnect = () => {
       setPendingProducts(pending);
       setApprovedProducts(approved);
 
-      // 2. Fetch Users & Sellers (safe case-insensitive role match)
-      const usersSnap = await getDocs(collection(db, 'users'));
+      // 2. Process Users & Sellers (safe case-insensitive role match)
       const allUsers = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
       setUsersList(allUsers);
 
       const allSellers = allUsers.filter(u => String(u.role).trim().toLowerCase() === 'seller');
       setSellers(allSellers);
 
-      // Pending sellers: any seller not yet approved
-      const pendingSellers = allSellers.filter(s => s.status !== 'Approved' && !s.verified);
+      const pendingSellers = allSellers.filter(
+        s => s.status !== 'Approved' && s.status !== 'Rejected' && !s.verified
+      );
 
-      // 3. Fetch Orders
-      const ordersSnap = await getDocs(collection(db, 'orders'));
+      // 3. Process Orders
       const allOrders = ordersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
       allOrders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       setOrders(allOrders);
@@ -104,6 +118,11 @@ const AdminDashboardAgriMarketConnect = () => {
         totalOrders: allOrders.length
       });
 
+      if (failedCollections.includes('users') || failedCollections.includes('orders')) {
+        showToast('⚠️ Firestore permissions denied for users/orders. Please publish firestore.rules in Firebase Console.');
+      } else if (failedCollections.length > 0) {
+        showToast(`⚠️ Partial load: publish firestore.rules for full access (${failedCollections.join(', ')}).`);
+      }
     } catch (err) {
       console.error('Error fetching admin data:', err);
       showToast('⚠️ Error connecting to Firestore.');
@@ -136,12 +155,14 @@ const AdminDashboardAgriMarketConnect = () => {
       }
 
       // 3. Send Email Notification via Backend API
+      let emailSent = false;
       if (seller.email) {
         try {
-          await axios.post('http://localhost:5000/api/notify/seller-approved', {
+          const res = await axios.post(`${getApiBaseUrl()}/api/notify/seller-approved`, {
             sellerEmail: seller.email,
             sellerName: seller.name || seller.businessName || 'Vendor'
-          }, { timeout: 4000 });
+          }, { timeout: 6000 });
+          emailSent = Boolean(res.data?.emailSent ?? res.data?.success);
         } catch (mailErr) {
           console.info('Backend email service noted:', mailErr.message);
         }
@@ -155,7 +176,11 @@ const AdminDashboardAgriMarketConnect = () => {
         activeSellers: prev.activeSellers + 1
       }));
 
-      showToast(`✅ Seller "${seller.name || seller.businessName || 'Vendor'}" approved & notified via email!`);
+      showToast(
+        emailSent
+          ? `✅ Seller "${seller.name || seller.businessName || 'Vendor'}" approved & email sent!`
+          : `✅ Seller "${seller.name || seller.businessName || 'Vendor'}" approved in Firestore!`
+      );
     } catch (err) {
       console.error('Seller approve error:', err);
       showToast('❌ Failed to approve seller.');
@@ -208,16 +233,21 @@ const AdminDashboardAgriMarketConnect = () => {
       }
 
       // 3. Send Email Notification via Backend API
-      const recipientEmail = product.sellerEmail || sellers.find(s => s.id === product.sellerId)?.email;
+      let emailSent = false;
+      const recipientEmail =
+        product.sellerEmail ||
+        sellers.find(s => s.id === product.sellerId)?.email ||
+        usersList.find(u => u.id === product.sellerId)?.email;
       if (recipientEmail) {
         try {
-          await axios.post('http://localhost:5000/api/notify/product-approved', {
+          const res = await axios.post(`${getApiBaseUrl()}/api/notify/product-approved`, {
             sellerEmail: recipientEmail,
             sellerName: product.sellerName || 'Vendor',
             productName: product.name,
             price: product.price,
             category: product.category || product.typeLabel || 'General'
-          }, { timeout: 4000 });
+          }, { timeout: 6000 });
+          emailSent = Boolean(res.data?.emailSent ?? res.data?.success);
         } catch (mailErr) {
           console.info('Backend email service noted:', mailErr.message);
         }
@@ -232,7 +262,11 @@ const AdminDashboardAgriMarketConnect = () => {
         liveCount: prev.liveCount + 1
       }));
 
-      showToast(`✅ Product "${product.name}" approved & seller notified via email!`);
+      showToast(
+        emailSent
+          ? `✅ Product "${product.name}" approved & seller notified via email!`
+          : `✅ Product "${product.name}" approved in Firestore!`
+      );
     } catch (error) {
       console.error('Approve product error:', error);
       showToast('❌ Failed to approve product.');
@@ -293,7 +327,9 @@ const AdminDashboardAgriMarketConnect = () => {
   const adminEmail = auth.currentUser?.email || 'admin@exveg.com';
   const adminInitial = (adminEmail[0] || 'A').toUpperCase();
 
-  const pendingSellersList = sellers.filter(s => s.status !== 'Approved' && !s.verified);
+  const pendingSellersList = sellers.filter(
+    s => s.status !== 'Approved' && s.status !== 'Rejected' && !s.verified
+  );
   const totalPendingQueue = pendingSellersList.length + pendingProducts.length;
 
   return (

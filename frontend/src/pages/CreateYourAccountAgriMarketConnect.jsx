@@ -1,8 +1,46 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+
+const MAX_RAW_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_FIRESTORE_DATAURL_CHARS = 850000;
+
+const compressImageToDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read image file.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => resolve(reader.result);
+      img.onload = () => {
+        const maxDim = 1000;
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.72));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+const readFileAsDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read document file.'));
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
 
 const CreateYourAccountAgriMarketConnect = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -38,49 +76,45 @@ const CreateYourAccountAgriMarketConnect = () => {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  // Handle Document File Selection
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
+  const processDocumentFile = async (file) => {
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > MAX_RAW_FILE_BYTES) {
       setError('File size exceeds 5MB limit. Please select a smaller file.');
       return;
     }
 
     setError('');
-    setDocumentFile(file);
-    setDocumentName(file.name);
-    const sizeInKb = (file.size / 1024).toFixed(1);
-    setDocumentSize(sizeInKb > 1000 ? `${(sizeInKb / 1024).toFixed(2)} MB` : `${sizeInKb} KB`);
+    try {
+      const dataUrl = file.type.startsWith('image/')
+        ? await compressImageToDataUrl(file)
+        : await readFileAsDataUrl(file);
 
-    // Read as Base64 for Firestore storage & preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      setDocumentDataUrl(reader.result);
-    };
-    reader.readAsDataURL(file);
+      if (dataUrl.length > MAX_FIRESTORE_DATAURL_CHARS) {
+        setError('Document file is too large for database storage (PDFs must be under 600 KB). Please compress it or upload a JPG/PNG photo.');
+        return;
+      }
+
+      setDocumentFile(file);
+      setDocumentName(file.name);
+      const sizeInKb = (file.size / 1024).toFixed(1);
+      setDocumentSize(sizeInKb > 1000 ? `${(sizeInKb / 1024).toFixed(2)} MB` : `${sizeInKb} KB`);
+      setDocumentDataUrl(dataUrl);
+    } catch (err) {
+      setError(err.message || 'Unable to process selected file.');
+    }
+  };
+
+  // Handle Document File Selection
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    processDocumentFile(file);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setError('File size exceeds 5MB limit.');
-        return;
-      }
-      setError('');
-      setDocumentFile(file);
-      setDocumentName(file.name);
-      const sizeInKb = (file.size / 1024).toFixed(1);
-      setDocumentSize(sizeInKb > 1000 ? `${(sizeInKb / 1024).toFixed(2)} MB` : `${sizeInKb} KB`);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setDocumentDataUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    processDocumentFile(file);
   };
 
   const handleRemoveFile = (e) => {
@@ -115,42 +149,50 @@ const CreateYourAccountAgriMarketConnect = () => {
       }
       setLoading(true);
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const uid = userCredential.user.uid;
+        const trimmedEmail = email.trim();
+        let firebaseUser = auth.currentUser;
+
+        if (!firebaseUser || firebaseUser.email?.toLowerCase() !== trimmedEmail.toLowerCase()) {
+          const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
+          firebaseUser = userCredential.user;
+        }
+
+        await updateProfile(firebaseUser, { displayName: name.trim() }).catch(() => {});
+
+        const uid = firebaseUser.uid;
         const generatedRef = `EXVEG-${Math.floor(10000 + Math.random() * 90000)}-REG`;
         setReferenceId(generatedRef);
 
         // Save authoritative user role and verification profile to Firestore
-        try {
-          await setDoc(doc(db, 'users', uid), {
-            name: name.trim(),
-            email: email.trim(),
-            phone: phone.trim(),
-            role: userType === 'seller' ? 'Seller' : 'Buyer',
-            businessName: businessName.trim() || name.trim(),
-            gstNumber: gstNumber.trim(),
-            panNumber: panNumber.trim(),
-            accountNumber: accountNumber.trim(),
-            ifscCode: ifscCode.trim(),
-            documentName: documentName || '',
-            documentUrl: documentDataUrl || '',
-            referenceId: generatedRef,
-            status: userType === 'seller' ? 'Pending' : 'Approved',
-            verified: userType !== 'seller',
-            createdAt: new Date().toISOString(),
-          });
-        } catch (firestoreErr) {
-          console.warn('Firestore profile save warning:', firestoreErr.message);
-        }
+        await setDoc(doc(db, 'users', uid), {
+          uid,
+          name: name.trim(),
+          email: trimmedEmail,
+          phone: phone.trim(),
+          role: userType === 'seller' ? 'Seller' : 'Buyer',
+          businessName: businessName.trim() || name.trim(),
+          gstNumber: gstNumber.trim(),
+          panNumber: panNumber.trim(),
+          accountNumber: accountNumber.trim(),
+          ifscCode: ifscCode.trim(),
+          documentName: documentName || '',
+          documentUrl: documentDataUrl || '',
+          referenceId: generatedRef,
+          status: userType === 'seller' ? 'Pending' : 'Approved',
+          verified: userType !== 'seller',
+          createdAt: new Date().toISOString(),
+        });
 
-        // Show confirmation step
+        // Show confirmation step only after Firestore write succeeds
         setCurrentStep(4);
       } catch (err) {
-        console.error(err);
+        console.error('Registration error:', err);
         if (err.code === 'auth/email-already-in-use') {
           setError('This email is already registered. Please sign in instead.');
+        } else if (err.code === 'permission-denied') {
+          setError('Firestore permission denied while saving your profile. Please ensure Firebase Security Rules (firestore.rules) are published.');
         } else {
-          setError(err.message);
+          setError(err.message || 'Registration failed. Please try again.');
         }
       } finally {
         setLoading(false);

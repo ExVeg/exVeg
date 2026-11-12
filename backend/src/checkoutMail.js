@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const buildCheckoutEmailPayload = ({
+  orderId,
   buyerName,
   email,
   phone,
@@ -13,42 +14,56 @@ const buildCheckoutEmailPayload = ({
   cartSummary,
   totalAmount,
   itemCount,
+  itemName,
+  quantity,
+  sellerName,
   sellerEmail,
   adminEmail,
 }) => {
   const fullAddress = [address, city, state, pincode].filter(Boolean).join(', ');
+  const resolvedItemsSummary = cartSummary || (itemName ? `- ${itemName} x${quantity || 1}` : '');
+  const resolvedSellerLabel = sellerName ? `${sellerName}${sellerEmail ? ` (${sellerEmail})` : ''}` : (sellerEmail || 'Verified Seller');
 
   const htmlTable = `
     <table style="border-collapse:collapse;width:100%;font-family:sans-serif;font-size:14px;">
+      ${orderId ? `
+      <tr style="background:#ecfdf5;">
+        <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Order ID</td>
+        <td style="padding:10px;border:1px solid #d1fae5;font-family:monospace;">${orderId}</td>
+      </tr>` : ''}
       <tr style="background:#f0fdf4;">
         <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Buyer Name</td>
-        <td style="padding:10px;border:1px solid #d1fae5;">${buyerName}</td>
+        <td style="padding:10px;border:1px solid #d1fae5;">${buyerName || 'N/A'}</td>
       </tr>
       <tr>
-        <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Email</td>
-        <td style="padding:10px;border:1px solid #d1fae5;">${email}</td>
+        <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Buyer Email</td>
+        <td style="padding:10px;border:1px solid #d1fae5;">${email || 'N/A'}</td>
       </tr>
       <tr style="background:#f0fdf4;">
-        <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Phone</td>
-        <td style="padding:10px;border:1px solid #d1fae5;">${phone}</td>
+        <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Buyer Phone</td>
+        <td style="padding:10px;border:1px solid #d1fae5;">${phone || 'N/A'}</td>
       </tr>
       <tr>
         <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Delivery Address</td>
-        <td style="padding:10px;border:1px solid #d1fae5;">${fullAddress}</td>
+        <td style="padding:10px;border:1px solid #d1fae5;">${fullAddress || 'N/A'}</td>
       </tr>
       <tr style="background:#f0fdf4;">
         <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Preferred Delivery</td>
-        <td style="padding:10px;border:1px solid #d1fae5;">${deliveryDate}</td>
+        <td style="padding:10px;border:1px solid #d1fae5;">${deliveryDate || 'Standard'}</td>
       </tr>
       <tr>
+        <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Seller</td>
+        <td style="padding:10px;border:1px solid #d1fae5;">${resolvedSellerLabel}</td>
+      </tr>
+      <tr style="background:#f0fdf4;">
         <td style="padding:10px;border:1px solid #d1fae5;font-weight:bold;">Notes</td>
         <td style="padding:10px;border:1px solid #d1fae5;">${notes || 'No special instructions'}</td>
       </tr>
     </table>
   `;
 
-  const itemsBlock = cartSummary
-    ? `<h3 style="color:#166534;margin-top:20px;">Order Items (${itemCount || ''}):</h3><pre style="background:#f0fdf4;padding:12px;border-radius:8px;border:1px solid #d1fae5;font-size:13px;">${cartSummary}</pre><p style="font-size:16px;font-weight:bold;color:#166534;">Total: ₹${totalAmount}</p>`
+  const itemsBlock = resolvedItemsSummary
+    ? `<h3 style="color:#166534;margin-top:20px;">Order Items (${itemCount || quantity || 1}):</h3><pre style="background:#f0fdf4;padding:12px;border-radius:8px;border:1px solid #d1fae5;font-size:13px;white-space:pre-wrap;">${resolvedItemsSummary}</pre>${totalAmount ? `<p style="font-size:16px;font-weight:bold;color:#166534;">Total: ₹${totalAmount}</p>` : ''}`
     : '';
 
   const htmlBody = (intro) => `
@@ -67,32 +82,36 @@ const buildCheckoutEmailPayload = ({
   `;
 
   const textSummary = [
-    `Buyer: ${buyerName}`,
-    `Email: ${email}`,
-    `Phone: ${phone}`,
-    `Address: ${fullAddress}`,
-    `Delivery Date: ${deliveryDate}`,
+    orderId ? `Order ID: ${orderId}` : '',
+    `Buyer: ${buyerName || 'N/A'}`,
+    email ? `Email: ${email}` : '',
+    `Phone: ${phone || 'N/A'}`,
+    `Address: ${fullAddress || 'N/A'}`,
+    `Delivery Date: ${deliveryDate || 'Standard'}`,
+    `Seller: ${resolvedSellerLabel}`,
     `Notes: ${notes || 'None'}`,
-    cartSummary ? `\nItems:\n${cartSummary}\n\nTotal: ₹${totalAmount}` : '',
-  ].join('\n');
+    resolvedItemsSummary ? `\nItems:\n${resolvedItemsSummary}${totalAmount ? `\n\nTotal: ₹${totalAmount}` : ''}` : '',
+  ].filter(Boolean).join('\n');
+
+  const resolvedItemCount = itemCount || quantity || 1;
 
   return {
     seller: {
       to: sellerEmail,
-      subject: `New Order Received — ExVeg (${itemCount} item${itemCount > 1 ? 's' : ''})`,
+      subject: `New Order Received — ExVeg (${resolvedItemCount} item${resolvedItemCount > 1 ? 's' : ''})`,
       text: `A new buyer order has been placed.\n\n${textSummary}`,
       html: htmlBody('A new buyer order has been placed on ExVeg. Please prepare the items for delivery.'),
     },
     admin: {
       to: adminEmail,
-      subject: `[ExVeg] New Checkout Request — ₹${totalAmount}`,
+      subject: `[ExVeg] New Order${totalAmount ? ` — ₹${totalAmount}` : ''}`,
       text: `A new checkout request was submitted.\n\n${textSummary}`,
       html: htmlBody('A new checkout request was submitted on ExVeg. This is your admin copy for tracking.'),
     },
   };
 };
 
-const sendCheckoutEmails = async ({ payload, smtpConfig }) => {
+const sendCheckoutEmails = async ({ payload, smtpConfig, extraSellerEmails = [] }) => {
   if (!smtpConfig.host || !smtpConfig.user || !smtpConfig.pass) {
     return { sent: false, reason: 'SMTP credentials are not configured.' };
   }
@@ -108,8 +127,22 @@ const sendCheckoutEmails = async ({ payload, smtpConfig }) => {
   });
 
   await transporter.verify();
-  await transporter.sendMail({ from: smtpConfig.from, ...payload.seller });
-  await transporter.sendMail({ from: smtpConfig.from, ...payload.admin });
+  const sends = [
+    transporter.sendMail({ from: smtpConfig.from, ...payload.seller }),
+    transporter.sendMail({ from: smtpConfig.from, ...payload.admin }),
+  ];
+
+  for (const extraEmail of extraSellerEmails) {
+    sends.push(
+      transporter.sendMail({
+        from: smtpConfig.from,
+        ...payload.seller,
+        to: extraEmail,
+      })
+    );
+  }
+
+  await Promise.all(sends);
 
   return { sent: true };
 };

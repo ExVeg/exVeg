@@ -29,17 +29,20 @@ const Login = () => {
       const uid = credential.user.uid;
       const email = credential.user.email?.toLowerCase() || '';
 
-      // Determine authoritative role
-      let userRole = formData.role || 'Buyer';
+      // Determine authoritative role from Firestore /users/{uid}
+      const isKnownAdminEmail =
+        email === 'sumit2325888@gmail.com' ||
+        email === 'exvegcompany@gmail.com' ||
+        email.startsWith('admin@');
+
+      let userRole = null;
       try {
         const snap = await getDoc(doc(db, 'users', uid));
         if (snap.exists() && snap.data().role) {
           const r = String(snap.data().role).trim();
           userRole = r.charAt(0).toUpperCase() + r.slice(1).toLowerCase();
         } else {
-          // If Firestore profile doesn't exist yet, save role from selection or email
-          const isInitialAdmin = formData.role === 'Admin' || email === 'sumit2325888@gmail.com' || email.startsWith('admin@');
-          userRole = isInitialAdmin ? 'Admin' : formData.role || 'Buyer';
+          userRole = isKnownAdminEmail ? 'Admin' : (formData.role === 'Seller' ? 'Seller' : 'Buyer');
           await setDoc(doc(db, 'users', uid), {
             email: formData.email,
             role: userRole,
@@ -48,16 +51,18 @@ const Login = () => {
         }
       } catch (firestoreErr) {
         console.warn('Firestore user fetch note:', firestoreErr);
+        userRole = isKnownAdminEmail ? 'Admin' : (formData.role === 'Seller' ? 'Seller' : 'Buyer');
       }
 
-      // If user selected Admin or account is Admin
-      if (formData.role === 'Admin' || userRole === 'Admin' || email === 'sumit2325888@gmail.com' || email.startsWith('admin@')) {
-        // Ensure Firestore role is saved as Admin so ProtectedRoute allows entry
-        try {
-          await setDoc(doc(db, 'users', uid), { role: 'Admin', email: formData.email }, { merge: true });
-        } catch {}
+      if (formData.role === 'Admin' && userRole !== 'Admin') {
+        setError('This account does not have Administrator privileges.');
+        setLoading(false);
+        return;
+      }
+
+      if (userRole === 'Admin') {
         navigate('/admin-dashboard');
-      } else if (userRole === 'Seller' || formData.role === 'Seller') {
+      } else if (userRole === 'Seller') {
         navigate('/seller-dashboard');
       } else {
         navigate('/products');

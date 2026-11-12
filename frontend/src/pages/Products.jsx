@@ -60,7 +60,8 @@ const Products = () => {
       price: product.price,
       imageUrl: product.imageUrl,
       quantity: 1,
-      sellerEmail: product.sellerEmail || 'seller@exveg.com',
+      sellerId: product.sellerId || '',
+      sellerEmail: product.sellerEmail || '',
       sellerName: product.sellerName || 'Verified Seller',
       category: product.category || '',
     }));

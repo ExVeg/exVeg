@@ -35,6 +35,17 @@ const SellerDashboardVendorPortal = () => {
           const productsData = [];
           querySnapshot.forEach((doc) => productsData.push({ id: doc.id, ...doc.data() }));
           setProducts(productsData);
+
+          // Fetch orders for this seller
+          try {
+            const ordQ = query(collection(db, 'orders'), where('sellerId', '==', currentUser.uid));
+            const ordSnap = await getDocs(ordQ);
+            const ordersData = ordSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            ordersData.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+            setOrders(ordersData);
+          } catch (ordErr) {
+            console.warn('Orders fetch note:', ordErr.message);
+          }
           
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -65,7 +76,8 @@ const SellerDashboardVendorPortal = () => {
         description: newProduct.description || '',
         imageUrl: newProduct.imageUrl || 'https://via.placeholder.com/300?text=No+Image',
         sellerId: user.uid,
-        sellerName: userData.name || 'Verified Seller',
+        sellerName: userData.businessName || userData.name || 'Verified Seller',
+        sellerEmail: user.email || userData.email || '',
         rating: 0,
         reviewsCount: 0,
         status: 'Pending', // Requires Admin Approval
@@ -170,18 +182,51 @@ const SellerDashboardVendorPortal = () => {
                 </div>
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-outline-variant">
                   <p className="text-on-surface-variant font-medium">Total Revenue</p>
-                  <p className="text-3xl font-bold text-primary mt-2">$0.00</p>
+                  <p className="text-3xl font-bold text-primary mt-2">
+                    ₹{orders.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0).toLocaleString('en-IN')}
+                  </p>
                 </div>
               </div>
 
-              {/* Recent Orders Table (Empty State) */}
+              {/* Recent Orders Table */}
               <div className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden">
                 <div className="p-md border-b border-outline-variant">
                   <h4 className="font-title-lg text-title-lg">Recent Orders</h4>
                 </div>
-                <div className="p-8 text-center text-on-surface-variant">
-                  {orders.length === 0 ? "You have no orders yet." : "Orders will appear here."}
-                </div>
+                {orders.length === 0 ? (
+                  <div className="p-8 text-center text-on-surface-variant">
+                    You have no orders yet.
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead className="bg-surface-container-low text-on-surface-variant font-label-sm uppercase">
+                        <tr>
+                          <th className="px-md py-3">Order ID</th>
+                          <th className="px-md py-3">Buyer</th>
+                          <th className="px-md py-3">Items</th>
+                          <th className="px-md py-3">Amount</th>
+                          <th className="px-md py-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-outline-variant">
+                        {orders.slice(0, 10).map((o) => (
+                          <tr key={o.id} className="hover:bg-surface-container-low">
+                            <td className="px-md py-3 font-mono text-xs">{o.id.slice(0, 8)}...</td>
+                            <td className="px-md py-3 text-sm font-medium">{o.buyerName || o.email}</td>
+                            <td className="px-md py-3 text-sm">{o.itemCount || o.items?.length || 1}</td>
+                            <td className="px-md py-3 font-bold text-primary">₹{Number(o.totalAmount || 0).toFixed(2)}</td>
+                            <td className="px-md py-3">
+                              <span className="px-2 py-1 rounded text-xs font-bold bg-secondary-container text-on-secondary-container">
+                                {o.status || 'Placed'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </>
           )}

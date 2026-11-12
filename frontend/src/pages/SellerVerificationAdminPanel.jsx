@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { db, auth } from '../firebase';
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, addDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import { getApiBaseUrl } from '../utils/api';
 
 const SellerVerificationAdminPanel = () => {
   const navigate = useNavigate();
@@ -26,23 +28,47 @@ const SellerVerificationAdminPanel = () => {
       const snap = await getDocs(collection(db, 'users'));
       const allSellers = snap.docs
         .map(d => ({ id: d.id, ...d.data() }))
-        .filter(u => u.role === 'Seller');
+        .filter(u => String(u.role).trim().toLowerCase() === 'seller');
       setSellers(allSellers);
     } catch (err) {
       console.error('Fetch sellers error:', err);
+      showToast('⚠️ Failed to fetch sellers from Firestore.');
     }
     setLoading(false);
   };
 
-  const handleApprove = async (id, name) => {
+  const handleApprove = async (seller) => {
+    const sellerName = seller.name || seller.businessName || 'Merchant';
     try {
-      await updateDoc(doc(db, 'users', id), {
+      await updateDoc(doc(db, 'users', seller.id), {
         status: 'Approved',
         verified: true,
         verifiedAt: new Date().toISOString()
       });
-      setSellers(prev => prev.map(s => s.id === id ? { ...s, status: 'Approved', verified: true } : s));
-      showToast(`✅ Seller "${name || 'Merchant'}" approved!`);
+      try {
+        await addDoc(collection(db, 'notifications'), {
+          userId: seller.id,
+          title: 'Seller Application Approved! 🌿',
+          message: 'Congratulations! Your ExVeg vendor application has been approved. You can now access your Vendor Portal and publish listings.',
+          type: 'seller_approved',
+          read: false,
+          createdAt: new Date().toISOString()
+        });
+      } catch {}
+
+      let emailSent = false;
+      if (seller.email) {
+        try {
+          const res = await axios.post(`${getApiBaseUrl()}/api/notify/seller-approved`, {
+            sellerEmail: seller.email,
+            sellerName
+          }, { timeout: 6000 });
+          emailSent = Boolean(res.data?.emailSent ?? res.data?.success);
+        } catch {}
+      }
+
+      setSellers(prev => prev.map(s => s.id === seller.id ? { ...s, status: 'Approved', verified: true } : s));
+      showToast(emailSent ? `✅ Seller "${sellerName}" approved & emailed!` : `✅ Seller "${sellerName}" approved!`);
     } catch {
       showToast('❌ Failed to approve seller.');
     }
@@ -63,12 +89,12 @@ const SellerVerificationAdminPanel = () => {
     }
   };
 
-  const totalPending = sellers.filter(s => s.status !== 'Approved' && !s.verified).length;
+  const totalPending = sellers.filter(s => s.status !== 'Approved' && s.status !== 'Rejected' && !s.verified).length;
   const totalApproved = sellers.filter(s => s.status === 'Approved' || s.verified).length;
   const totalRejected = sellers.filter(s => s.status === 'Rejected').length;
 
   const filtered = sellers.filter(s => {
-    if (statusFilter === 'Pending') return s.status !== 'Approved' && !s.verified;
+    if (statusFilter === 'Pending') return s.status !== 'Approved' && s.status !== 'Rejected' && !s.verified;
     if (statusFilter === 'Approved') return s.status === 'Approved' || s.verified;
     if (statusFilter === 'Rejected') return s.status === 'Rejected';
     return true;
@@ -222,7 +248,7 @@ const SellerVerificationAdminPanel = () => {
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
                           <button
-                            onClick={() => handleApprove(s.id, s.name)}
+                            onClick={() => handleApprove(s)}
                             className="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary/90"
                           >
                             Approve

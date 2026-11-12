@@ -6,6 +6,7 @@ import { removeFromCart, updateQuantity, clearCart } from '../store/cartSlice';
 import { useToast } from '../context/ToastContext';
 import { db, auth } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import { getApiBaseUrl } from '../utils/api';
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -36,10 +37,10 @@ const Cart = () => {
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemsLabel = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Build cart summary string for email
+  // Build cart summary string for email (including product + seller details)
   const buildCartSummary = () =>
     cartItems.map((item) =>
-      `- ${item.name} x${item.quantity} @ ₹${item.price.toFixed(2)} = ₹${(item.price * item.quantity).toFixed(2)}`
+      `- ${item.name} (Seller: ${item.sellerName || 'Verified Seller'}${item.sellerEmail ? ` <${item.sellerEmail}>` : ''}) x${item.quantity} @ ₹${item.price.toFixed(2)} = ₹${(item.price * item.quantity).toFixed(2)}`
     ).join('\n');
 
   const handleSubmit = async (e) => {
@@ -48,13 +49,24 @@ const Cart = () => {
       showToast({ message: 'Your cart is empty!', type: 'error' });
       return;
     }
+    if (!auth.currentUser) {
+      const msg = 'Please log in to your account before placing an order.';
+      setStatus({ type: 'error', message: msg });
+      showToast({ message: msg, type: 'error' });
+      return;
+    }
     setIsSubmitting(true);
     setStatus({ type: '', message: '' });
 
     try {
+      const sellerIds = [...new Set(cartItems.map((item) => item.sellerId).filter(Boolean))];
+      const primarySellerName = [...new Set(cartItems.map((i) => i.sellerName).filter(Boolean))].join(', ') || 'Verified Seller';
+      const sellerEmails = [...new Set(cartItems.map((i) => i.sellerEmail).filter(Boolean))];
+      const primarySellerEmail = sellerEmails[0] || '';
+
       // 1. Write order directly to Firestore so buyer/seller/admin orders always work
       const orderData = {
-        buyerId: auth.currentUser?.uid || 'guest',
+        buyerId: auth.currentUser.uid,
         buyerName: form.buyerName,
         email: form.email,
         phone: form.phone,
@@ -73,13 +85,14 @@ const Cart = () => {
           category: item.category || '',
           sellerId: item.sellerId || '',
           sellerName: item.sellerName || 'Verified Seller',
-          sellerEmail: item.sellerEmail || 'seller@exveg.com',
+          sellerEmail: item.sellerEmail || '',
         })),
         totalAmount: parseFloat(subtotal.toFixed(2)),
         itemCount: itemsLabel,
         sellerId: cartItems[0]?.sellerId || 'unknown',
-        sellerEmail: cartItems[0]?.sellerEmail || 'seller@exveg.com',
-        sellerName: cartItems[0]?.sellerName || 'Verified Seller',
+        sellerIds,
+        sellerEmail: primarySellerEmail,
+        sellerName: primarySellerName,
         status: 'Placed',
         createdAt: new Date().toISOString(),
       };
@@ -87,9 +100,9 @@ const Cart = () => {
       const docRef = await addDoc(collection(db, 'orders'), orderData);
       setPlacedOrderId(docRef.id);
 
-      // 2. Optionally attempt to notify backend email service (non-blocking)
+      // 2. Notify backend email service (works locally via :5000 and on Vercel via /api/checkout)
       try {
-        await axios.post('http://localhost:5000/api/checkout', {
+        await axios.post(`${getApiBaseUrl()}/api/checkout`, {
           orderId: docRef.id,
           buyerName: form.buyerName,
           email: form.email,
@@ -100,14 +113,17 @@ const Cart = () => {
           pincode: form.pincode,
           deliveryDate: form.deliveryDate,
           notes: form.notes,
+          items: orderData.items,
           cartSummary: buildCartSummary(),
           totalAmount: subtotal.toFixed(2),
           itemCount: itemsLabel,
-          sellerEmail: cartItems[0]?.sellerEmail || 'seller@exveg.com',
-          adminEmail: 'raushanraj211003@gmail.com',
-        }, { timeout: 3000 });
+          sellerName: primarySellerName,
+          sellerEmail: primarySellerEmail,
+          sellerEmails,
+          adminEmail: 'exvegcompany@gmail.com',
+        }, { timeout: 8000 });
       } catch (backendErr) {
-        console.info('Backend email notification skipped (running client-side Firestore flow).');
+        console.info('Backend email notification note:', backendErr.message);
       }
 
       showToast({ message: 'Order placed successfully!', type: 'success' });
@@ -115,7 +131,9 @@ const Cart = () => {
       setOrderPlaced(true);
     } catch (error) {
       console.error('Order creation error:', error);
-      const msg = error.message || 'Unable to submit checkout. Please try again.';
+      const msg = error.code === 'permission-denied'
+        ? 'Unable to save order: Firestore permissions denied. Please ensure firestore.rules are published.'
+        : (error.message || 'Unable to submit checkout. Please try again.');
       setStatus({ type: 'error', message: msg });
       showToast({ message: msg, type: 'error' });
     } finally {

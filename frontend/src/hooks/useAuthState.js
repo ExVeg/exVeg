@@ -25,8 +25,12 @@ export const useAuthState = () => {
             const normalized = r.charAt(0).toUpperCase() + r.slice(1).toLowerCase();
             setRole(normalized);
           } else {
-            // If user doc doesn't exist yet, check admin identifier or default
-            if (email === 'sumit2325888@gmail.com' || email.startsWith('admin@')) {
+            // If user doc doesn't exist yet, check known admin identifier or default
+            if (
+              email === 'sumit2325888@gmail.com' ||
+              email === 'exvegcompany@gmail.com' ||
+              email.startsWith('admin@')
+            ) {
               setRole('Admin');
               setDoc(doc(db, 'users', firebaseUser.uid), { role: 'Admin', email: firebaseUser.email }, { merge: true }).catch(() => {});
             } else {
@@ -35,7 +39,11 @@ export const useAuthState = () => {
           }
         } catch {
           // Fallback if offline/network issues
-          if (email === 'sumit2325888@gmail.com' || email.startsWith('admin@')) {
+          if (
+            email === 'sumit2325888@gmail.com' ||
+            email === 'exvegcompany@gmail.com' ||
+            email.startsWith('admin@')
+          ) {
             setRole('Admin');
           } else {
             setRole('Buyer');

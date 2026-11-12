@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import {
   collection, query, where, getDocs,
   addDoc, updateDoc, deleteDoc, doc
@@ -43,6 +43,7 @@ const ToolProductModal = ({ existing, onClose, onSaved, sellerId, sellerName }) 
         type: 'tools',
         sellerId,
         sellerName,
+        sellerEmail: auth.currentUser?.email || existing?.sellerEmail || '',
         status: isEdit ? (existing.status ?? 'Pending') : 'Pending',
         rating: existing?.rating ?? 0,
         reviewsCount: existing?.reviewsCount ?? 0,

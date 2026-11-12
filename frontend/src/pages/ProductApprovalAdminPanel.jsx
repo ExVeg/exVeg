@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { db, auth } from '../firebase';
-import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import { getApiBaseUrl } from '../utils/api';
 
 const ProductApprovalAdminPanel = () => {
   const navigate = useNavigate();
@@ -21,11 +23,14 @@ const ProductApprovalAdminPanel = () => {
 
   const fetchPending = async () => {
     setLoading(true);
+    const safeGet = async (q) => {
+      try { return await getDocs(q); } catch { return { docs: [] }; }
+    };
     try {
       const [prodSnap, nurSnap, toolSnap] = await Promise.all([
-        getDocs(query(collection(db, 'products'), where('status', '==', 'Pending'))),
-        getDocs(query(collection(db, 'nursery'), where('status', '==', 'Pending'))),
-        getDocs(query(collection(db, 'tools'), where('status', '==', 'Pending'))),
+        safeGet(query(collection(db, 'products'), where('status', '==', 'Pending'))),
+        safeGet(query(collection(db, 'nursery'), where('status', '==', 'Pending'))),
+        safeGet(query(collection(db, 'tools'), where('status', '==', 'Pending'))),
       ]);
 
       const all = [
@@ -42,9 +47,40 @@ const ProductApprovalAdminPanel = () => {
 
   const handleApprove = async (p) => {
     try {
-      await updateDoc(doc(db, p.collectionName, p.id), { status: 'Approved' });
+      await updateDoc(doc(db, p.collectionName, p.id), {
+        status: 'Approved',
+        approvedAt: new Date().toISOString()
+      });
+
+      if (p.sellerId) {
+        try {
+          await addDoc(collection(db, 'notifications'), {
+            userId: p.sellerId,
+            title: `Product Approved: "${p.name}" 🌿`,
+            message: `Your listing for "${p.name}" (₹${p.price}) has been approved and is now live on the marketplace.`,
+            type: 'product_approved',
+            read: false,
+            createdAt: new Date().toISOString()
+          });
+        } catch {}
+      }
+
+      let emailSent = false;
+      if (p.sellerEmail) {
+        try {
+          const res = await axios.post(`${getApiBaseUrl()}/api/notify/product-approved`, {
+            sellerEmail: p.sellerEmail,
+            sellerName: p.sellerName || 'Vendor',
+            productName: p.name,
+            price: p.price,
+            category: p.category || 'General'
+          }, { timeout: 6000 });
+          emailSent = Boolean(res.data?.emailSent ?? res.data?.success);
+        } catch {}
+      }
+
       setProducts(prev => prev.filter(item => item.id !== p.id));
-      showToast(`✅ "${p.name}" approved!`);
+      showToast(emailSent ? `✅ "${p.name}" approved & seller emailed!` : `✅ "${p.name}" approved!`);
     } catch {
       showToast('❌ Failed to approve.');
     }

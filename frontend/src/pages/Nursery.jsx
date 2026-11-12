@@ -41,6 +41,7 @@ const NurseryProductModal = ({ existing, onClose, onSaved, sellerId, sellerName 
         type: 'nursery',
         sellerId,
         sellerName,
+        sellerEmail: auth.currentUser?.email || existing?.sellerEmail || '',
         status: isEdit ? (existing.status ?? 'Pending') : 'Pending',
         rating: existing?.rating ?? 0,
         reviewsCount: existing?.reviewsCount ?? 0,
