@@ -13,6 +13,7 @@ const SellerDashboardVendorPortal = () => {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [showAddProduct, setShowAddProduct] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   
   // New Product Form State
   const [newProduct, setNewProduct] = useState({ name: '', price: '', category: '', stock: '' });
@@ -112,22 +113,38 @@ const SellerDashboardVendorPortal = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#f8faf5]">
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-xs"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
       {/* SideNavBar */}
-      <aside className="hidden md:flex flex-col h-full w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl py-md transition-all duration-300">
-        <div className="px-md mb-lg pb-4 border-b border-white/10">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
-              <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
-            </span>
-            <h1 className="font-headline-md text-xl font-extrabold text-white tracking-tight">Vendor Portal</h1>
+      <aside className={`fixed md:static inset-y-0 left-0 z-50 md:z-auto flex flex-col h-full w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl py-md transform transition-transform duration-300 ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        <div className="px-md mb-lg pb-4 border-b border-white/10 flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
+                <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+              </span>
+              <h1 className="font-headline-md text-xl font-extrabold text-white tracking-tight">Vendor Portal</h1>
+            </div>
+            <p className="font-label-sm text-label-sm text-emerald-200/80">ExVeg Professional</p>
           </div>
-          <p className="font-label-sm text-label-sm text-emerald-200/80">ExVeg Professional</p>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="md:hidden p-1.5 rounded-lg text-emerald-100 hover:bg-white/10"
+            aria-label="Close sidebar"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
         </div>
         <nav className="flex-1 space-y-1 px-2">
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => { setActiveTab(item.id); setMobileSidebarOpen(false); }}
               className={`w-full flex items-center gap-sm px-md py-3 rounded-xl transition-all font-label-md text-label-md ${activeTab === item.id ? 'bg-white/15 text-amber-300 font-bold shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'}`}
             >
               <span className="material-symbols-outlined">{item.icon}</span>
@@ -136,7 +153,7 @@ const SellerDashboardVendorPortal = () => {
           ))}
         </nav>
         <div className="px-md mt-auto pt-md border-t border-white/10 space-y-2">
-          <button onClick={() => setShowAddProduct(true)} className="w-full flex items-center justify-center gap-xs bg-amber-500 hover:bg-amber-600 text-white py-2.5 px-4 rounded-full font-bold text-label-md shadow-md transition-all">
+          <button onClick={() => { setShowAddProduct(true); setMobileSidebarOpen(false); }} className="w-full flex items-center justify-center gap-xs bg-amber-500 hover:bg-amber-600 text-white py-2.5 px-4 rounded-full font-bold text-label-md shadow-md transition-all">
             <span className="material-symbols-outlined text-sm">add</span>
             New Product
           </button>
@@ -155,18 +172,28 @@ const SellerDashboardVendorPortal = () => {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto relative bg-[#f8faf5]">
         {/* TopAppBar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between px-margin-desktop py-4 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm">
-          <div className="flex items-center gap-md">
-            <h2 className="font-title-lg text-xl font-extrabold text-[#143d23]">{activeTab}</h2>
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 md:px-margin-desktop py-3.5 md:py-4 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm gap-2">
+          <div className="flex items-center gap-2 sm:gap-md min-w-0">
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className="md:hidden p-2 rounded-lg border border-outline-variant text-[#143d23] flex-shrink-0"
+              aria-label="Open menu"
+            >
+              <span className="material-symbols-outlined">menu</span>
+            </button>
+            <h2 className="font-title-lg text-lg sm:text-xl font-extrabold text-[#143d23] truncate">{activeTab}</h2>
           </div>
-          <div className="flex items-center gap-3 md:gap-md">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-md flex-shrink-0">
             <LanguageSwitcher compact />
-            <Link to="/" className="text-primary text-sm font-bold border border-primary/30 px-3 py-1.5 rounded-full hover:bg-primary hover:text-white transition-all">Go to Home</Link>
-            <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+            <Link to="/" className="text-primary text-xs sm:text-sm font-bold border border-primary/30 px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-primary hover:text-white transition-all whitespace-nowrap">
+              <span className="hidden sm:inline">Go to Home</span>
+              <span className="sm:hidden">Home</span>
+            </Link>
+            <button className="hidden sm:inline-flex material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
           </div>
         </header>
 
-        <div className="p-margin-desktop space-y-md">
+        <div className="p-4 sm:p-6 md:p-margin-desktop space-y-md">
           {activeTab === 'Dashboard' && (
             <>
               {/* Welcome Banner */}

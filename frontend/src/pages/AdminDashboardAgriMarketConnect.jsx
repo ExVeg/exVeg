@@ -19,6 +19,7 @@ const AdminDashboardAgriMarketConnect = () => {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Live Data States
   const [pendingProducts, setPendingProducts] = useState([]);
@@ -342,24 +343,41 @@ const AdminDashboardAgriMarketConnect = () => {
         </div>
       )}
 
+      {/* Mobile Sidebar Backdrop */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-xs"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="fixed left-0 top-0 h-full z-40 w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl flex flex-col">
-        <div className="p-6 border-b border-white/10">
-          <Link to="/" className="text-xl font-headline-md font-extrabold text-white flex items-center gap-2.5">
-            <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
-              <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
-            </span>
-            ExVeg
-          </Link>
-          <p className="font-label-sm text-emerald-200/80 flex items-center gap-1 mt-1.5">
-            <span className="material-symbols-outlined text-[14px] text-amber-300">admin_panel_settings</span>
-            Admin Console
-          </p>
+      <aside className={`fixed left-0 top-0 h-full z-50 md:z-40 w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl flex flex-col transform transition-transform duration-300 ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        <div className="p-6 border-b border-white/10 flex items-center justify-between">
+          <div>
+            <Link to="/" className="text-xl font-headline-md font-extrabold text-white flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
+                <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+              </span>
+              ExVeg
+            </Link>
+            <p className="font-label-sm text-emerald-200/80 flex items-center gap-1 mt-1.5">
+              <span className="material-symbols-outlined text-[14px] text-amber-300">admin_panel_settings</span>
+              Admin Console
+            </p>
+          </div>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="md:hidden p-1.5 rounded-lg text-emerald-100 hover:bg-white/10"
+            aria-label="Close sidebar"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto">
           <button
-            onClick={() => setActiveTab('pending')}
+            onClick={() => { setActiveTab('pending'); setMobileSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === 'pending' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
@@ -374,7 +392,7 @@ const AdminDashboardAgriMarketConnect = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('approved')}
+            onClick={() => { setActiveTab('approved'); setMobileSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === 'approved' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
@@ -385,7 +403,7 @@ const AdminDashboardAgriMarketConnect = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('sellers')}
+            onClick={() => { setActiveTab('sellers'); setMobileSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === 'sellers' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
@@ -400,7 +418,7 @@ const AdminDashboardAgriMarketConnect = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('orders')}
+            onClick={() => { setActiveTab('orders'); setMobileSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === 'orders' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
@@ -410,7 +428,7 @@ const AdminDashboardAgriMarketConnect = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('users')}
+            onClick={() => { setActiveTab('users'); setMobileSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === 'users' ? 'bg-white/15 text-amber-300 shadow-sm' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white'
             }`}
@@ -461,9 +479,16 @@ const AdminDashboardAgriMarketConnect = () => {
       </aside>
 
       {/* Top Header */}
-      <header className="fixed top-0 right-0 left-64 h-16 flex justify-between items-center px-6 md:px-8 z-30 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm">
-        <div className="flex items-center gap-4">
-          <h2 className="font-headline-md text-xl font-bold text-[#143d23] capitalize">
+      <header className="fixed top-0 right-0 left-0 md:left-64 h-16 flex justify-between items-center px-4 md:px-8 z-30 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm gap-2">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="md:hidden p-2 rounded-lg border border-outline-variant text-[#143d23] flex-shrink-0"
+            aria-label="Open menu"
+          >
+            <span className="material-symbols-outlined">menu</span>
+          </button>
+          <h2 className="font-headline-md text-base sm:text-xl font-bold text-[#143d23] capitalize truncate">
             {activeTab === 'pending' && 'Pending Approvals Queue'}
             {activeTab === 'approved' && 'Live Marketplace Listings'}
             {activeTab === 'sellers' && 'All Sellers & Verification'}
@@ -471,7 +496,7 @@ const AdminDashboardAgriMarketConnect = () => {
             {activeTab === 'users' && 'System Users Directory'}
           </h2>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           <LanguageSwitcher compact />
           <div className="relative w-56 hidden lg:block">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
@@ -483,19 +508,19 @@ const AdminDashboardAgriMarketConnect = () => {
               className="w-full pl-9 pr-4 py-1.5 bg-[#f4f7f2] border border-outline-variant rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <button onClick={fetchAllData} className="text-primary hover:underline text-sm font-semibold flex items-center gap-1">
+          <button onClick={fetchAllData} className="hidden sm:flex text-primary hover:underline text-sm font-semibold items-center gap-1">
             <span className="material-symbols-outlined text-[18px]">refresh</span>
             Refresh
           </button>
-          <Link to="/" className="text-primary text-sm font-bold hover:bg-primary hover:text-white flex items-center gap-1 border border-primary/30 px-3 py-1.5 rounded-full transition-all">
+          <Link to="/" className="text-primary text-xs sm:text-sm font-bold hover:bg-primary hover:text-white flex items-center gap-1 border border-primary/30 px-2.5 sm:px-3 py-1.5 rounded-full transition-all">
             <span className="material-symbols-outlined text-[16px]">storefront</span>
-            Storefront
+            <span className="hidden sm:inline">Storefront</span>
           </Link>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="ml-64 mt-16 p-8 min-h-screen bg-[#f8faf5]">
+      <main className="ml-0 md:ml-64 mt-16 p-4 sm:p-6 md:p-8 min-h-screen bg-[#f8faf5]">
         {/* Dynamic KPI Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-8">
           <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex items-center gap-4">

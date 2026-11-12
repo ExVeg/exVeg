@@ -1,28 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const SellerRegistrationBankDetails = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <>
       
 {/* TopNavBar */}
 <header className="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm border-b border-outline-variant/60 z-50">
-<div className="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop w-full">
+<div className="flex justify-between items-center h-16 px-4 md:px-margin-desktop w-full">
 <Link to="/" className="font-headline-md text-headline-md font-extrabold text-[#166534] flex items-center gap-2">
 <span className="material-symbols-outlined text-primary text-2xl" style={{"fontVariationSettings":"'FILL' 1"}}>spa</span>
 ExVeg
 </Link>
-<nav className="flex gap-4 md:gap-6 items-center">
-<LanguageSwitcher compact />
+<nav className="flex gap-2 sm:gap-4 md:gap-6 items-center">
+<div className="hidden sm:block"><LanguageSwitcher compact /></div>
 <Link className="hidden md:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" to="/products">Marketplace</Link>
 <Link className="hidden md:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" to="/nursery">Resources</Link>
 <Link className="hidden md:inline text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" to="/">About Us</Link>
-<Link to="/login" className="bg-gradient-to-r from-[#166534] to-[#15803d] text-white px-5 py-1.5 rounded-full font-bold text-sm active:scale-95 transition-transform">
+<Link to="/login" className="hidden md:inline bg-gradient-to-r from-[#166534] to-[#15803d] text-white px-5 py-1.5 rounded-full font-bold text-sm active:scale-95 transition-transform">
                     Log In
                 </Link>
+<button type="button" onClick={() => setMobileMenuOpen(v => !v)} className="md:hidden p-2 rounded-lg border border-outline-variant text-[#143d23]" aria-label="Toggle menu">
+<span className="material-symbols-outlined">{mobileMenuOpen ? 'close' : 'menu'}</span>
+</button>
 </nav>
 </div>
+{mobileMenuOpen && (
+<div className="md:hidden border-t border-outline-variant bg-white px-4 py-3 space-y-2 shadow-md">
+<div className="sm:hidden pb-2 border-b border-outline-variant/40 flex justify-between items-center">
+<span className="text-xs font-bold text-on-surface-variant">Language:</span>
+<LanguageSwitcher compact />
+</div>
+<Link to="/products" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-semibold text-on-surface hover:text-primary">Marketplace</Link>
+<Link to="/nursery" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-semibold text-on-surface hover:text-primary">Resources</Link>
+<Link to="/" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-semibold text-on-surface hover:text-primary">About Us</Link>
+<Link to="/login" onClick={() => setMobileMenuOpen(false)} className="block py-2 bg-primary text-white text-center rounded-lg font-bold">Log In</Link>
+</div>
+)}
 </header>
 <main className="flex-grow pt-24 pb-12 px-margin-mobile md:px-margin-desktop flex flex-col items-center bg-[#f8faf5] min-h-screen">
 {/* Progress Indicator */}

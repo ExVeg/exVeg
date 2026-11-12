@@ -12,6 +12,7 @@ const UserOrderManagementAdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -64,31 +65,47 @@ const UserOrderManagementAdminPanel = () => {
         </div>
       )}
 
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-xs"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
       {/* SideNavBar */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl z-40 hidden md:flex flex-col">
-        <div className="p-6 border-b border-white/10">
-          <Link to="/" className="text-xl font-headline-md font-extrabold text-white flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
-              <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
-            </span>
-            ExVeg
-          </Link>
-          <p className="font-label-md text-emerald-200/80 mt-1">Admin Console</p>
+      <aside className={`fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#143d23] to-[#0f3f22] text-emerald-50 shadow-xl z-50 md:z-40 flex flex-col transform transition-transform duration-300 ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        <div className="p-6 border-b border-white/10 flex items-start justify-between">
+          <div>
+            <Link to="/" className="text-xl font-headline-md font-extrabold text-white flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
+                <span className="material-symbols-outlined text-amber-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+              </span>
+              ExVeg
+            </Link>
+            <p className="font-label-md text-emerald-200/80 mt-1">Admin Console</p>
+          </div>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="md:hidden p-1.5 rounded-lg text-emerald-100 hover:bg-white/10"
+            aria-label="Close sidebar"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
         </div>
         <nav className="px-4 py-4 space-y-1.5 flex-1">
-          <Link to="/admin-dashboard" className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
+          <Link to="/admin-dashboard" onClick={() => setMobileSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-label-md">Dashboard</span>
           </Link>
-          <Link to="/seller-verification" className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
+          <Link to="/seller-verification" onClick={() => setMobileSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
             <span className="material-symbols-outlined">storefront</span>
             <span className="font-label-md">Sellers</span>
           </Link>
-          <Link to="/user-order-management" className="flex items-center gap-3 px-4 py-3 bg-white/15 text-amber-300 rounded-xl font-bold shadow-sm">
+          <Link to="/user-order-management" onClick={() => setMobileSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-white/15 text-amber-300 rounded-xl font-bold shadow-sm">
             <span className="material-symbols-outlined">shopping_cart</span>
             <span className="font-label-md">Orders & Users</span>
           </Link>
-          <Link to="/analytics" className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
+          <Link to="/analytics" onClick={() => setMobileSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-emerald-100/80 hover:bg-white/10 hover:text-white transition-colors rounded-xl">
             <span className="material-symbols-outlined">bar_chart</span>
             <span className="font-label-md">Analytics</span>
           </Link>
@@ -105,9 +122,18 @@ const UserOrderManagementAdminPanel = () => {
       </aside>
 
       {/* TopNavBar */}
-      <header className="fixed top-0 right-0 left-0 md:left-64 h-16 flex justify-between items-center px-8 z-30 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm">
-        <h2 className="font-headline-md text-xl font-bold text-[#143d23]">Order & User Operations</h2>
-        <div className="flex items-center gap-3">
+      <header className="fixed top-0 right-0 left-0 md:left-64 h-16 flex justify-between items-center px-4 md:px-8 z-30 bg-white/95 backdrop-blur-md border-b border-outline-variant/60 shadow-sm gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="md:hidden p-2 rounded-lg border border-outline-variant text-[#143d23] flex-shrink-0"
+            aria-label="Open menu"
+          >
+            <span className="material-symbols-outlined">menu</span>
+          </button>
+          <h2 className="font-headline-md text-base sm:text-xl font-bold text-[#143d23] truncate">Order & User Operations</h2>
+        </div>
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           <LanguageSwitcher compact />
           <span className="text-sm text-on-surface-variant font-medium hidden sm:inline">{adminEmail}</span>
           <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">
@@ -117,7 +143,7 @@ const UserOrderManagementAdminPanel = () => {
       </header>
 
       {/* Main Content */}
-      <main className="pt-24 pb-12 px-8 md:ml-64 min-h-screen bg-[#f8faf5]">
+      <main className="pt-20 pb-12 px-4 sm:px-6 md:px-8 md:ml-64 min-h-screen bg-[#f8faf5]">
         <div className="max-w-7xl mx-auto">
           {/* Summary Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-gutter mb-8">

@@ -71,16 +71,16 @@ const MainLayout = () => {
 
       {/* Top Navigation Bar */}
       <header className="bg-white/95 backdrop-blur-md border-b border-outline-variant/60 w-full sticky top-0 shadow-sm z-50">
-        <nav className="flex justify-between items-center w-full px-4 md:px-margin-desktop py-3 max-w-7xl mx-auto gap-4">
+        <nav className="flex justify-between items-center w-full px-3 sm:px-4 md:px-margin-desktop py-2.5 sm:py-3 max-w-7xl mx-auto gap-2 md:gap-4">
           {/* Brand Logo */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#166534] to-[#2e7d32] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-                <span className="material-symbols-outlined text-white text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <Link to="/" className="flex items-center gap-2 sm:gap-2.5 group">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#166534] to-[#2e7d32] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+                <span className="material-symbols-outlined text-white text-lg sm:text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
               </div>
               <div>
-                <span className="font-headline-md text-xl font-extrabold text-[#166534] tracking-tight block leading-none">ExVeg</span>
-                <span className="text-[10px] font-medium text-on-surface-variant tracking-wide">Let&apos;s grow smarter together</span>
+                <span className="font-headline-md text-lg sm:text-xl font-extrabold text-[#166534] tracking-tight block leading-none">ExVeg</span>
+                <span className="hidden sm:block text-[10px] font-medium text-on-surface-variant tracking-wide">Let&apos;s grow smarter together</span>
               </div>
             </Link>
           </div>
@@ -190,10 +190,10 @@ const MainLayout = () => {
 
         {/* Mobile Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-outline-variant bg-white px-4 py-4 space-y-3">
-            <div className="sm:hidden pb-2 border-b border-outline-variant/40 flex items-center justify-between">
+          <div className="md:hidden border-t border-outline-variant bg-white px-4 py-4 space-y-3 shadow-lg">
+            <div className="sm:hidden pb-2 border-b border-outline-variant/40 flex items-center justify-between gap-2">
               <span className="text-xs font-bold text-on-surface-variant">Language:</span>
-              <LanguageSwitcher />
+              <LanguageSwitcher compact />
             </div>
             <form onSubmit={handleHeaderSearch} className="flex items-center bg-[#f4f7f2] border border-outline-variant rounded-full pl-3 pr-1 py-1">
               <input
@@ -205,19 +205,28 @@ const MainLayout = () => {
               />
               <button type="submit" className="bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-full">Go</button>
             </form>
-            <div className="flex flex-col gap-2 text-sm font-semibold">
-              <Link to="/products" onClick={() => setMobileMenuOpen(false)} className="py-1.5 hover:text-primary">Marketplace</Link>
-              <Link to="/nursery" onClick={() => setMobileMenuOpen(false)} className="py-1.5 hover:text-primary">Nursery</Link>
-              <Link to="/tools" onClick={() => setMobileMenuOpen(false)} className="py-1.5 hover:text-primary">Tools</Link>
-              <Link to={analyticsLink} onClick={() => setMobileMenuOpen(false)} className="py-1.5 hover:text-primary">Analytics</Link>
+            <div className="flex flex-col gap-1.5 text-sm font-semibold">
+              <Link to="/products" onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg hover:bg-[#f4f7f2] hover:text-primary">Marketplace</Link>
+              <Link to="/nursery" onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg hover:bg-[#f4f7f2] hover:text-primary">Nursery</Link>
+              <Link to="/tools" onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg hover:bg-[#f4f7f2] hover:text-primary">Tools</Link>
+              <Link to={analyticsLink} onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg hover:bg-[#f4f7f2] hover:text-primary">Analytics</Link>
+              <Link to="/notifications" onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg hover:bg-[#f4f7f2] hover:text-primary">Notifications</Link>
+              <Link to="/cart" onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg hover:bg-[#f4f7f2] hover:text-primary">Cart ({cartCount})</Link>
               {role === 'Admin' && (
-                <Link to="/admin-dashboard" onClick={() => setMobileMenuOpen(false)} className="py-1.5 text-primary font-bold">Admin Dashboard</Link>
+                <Link to="/admin-dashboard" onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg text-primary font-bold bg-secondary-container/40">Admin Dashboard</Link>
               )}
               {role === 'Seller' && (
-                <Link to="/seller-dashboard" onClick={() => setMobileMenuOpen(false)} className="py-1.5 text-primary font-bold">Vendor Portal</Link>
+                <Link to="/seller-dashboard" onClick={() => setMobileMenuOpen(false)} className="py-2 px-2 rounded-lg text-primary font-bold bg-secondary-container/40">Vendor Portal</Link>
               )}
-              {!user && (
-                <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="py-2 bg-primary text-white text-center rounded-lg font-bold">Register</Link>
+              {user ? (
+                <button onClick={handleLogout} className="mt-1 py-2 px-3 rounded-lg bg-error-container/50 text-error font-bold text-left">
+                  Sign Out ({user.email?.split('@')[0]})
+                </button>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="py-2 border border-primary text-primary text-center rounded-lg font-bold">Login</Link>
+                  <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="py-2 bg-primary text-white text-center rounded-lg font-bold">Register</Link>
+                </div>
               )}
             </div>
           </div>
