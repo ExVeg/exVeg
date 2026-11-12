@@ -54,7 +54,7 @@ const SellerVerificationAdminPanel = () => {
           read: false,
           createdAt: new Date().toISOString()
         });
-      } catch {}
+      } catch { }
 
       let emailSent = false;
       if (seller.email) {
@@ -64,7 +64,7 @@ const SellerVerificationAdminPanel = () => {
             sellerName
           }, { timeout: 6000 });
           emailSent = Boolean(res.data?.emailSent ?? res.data?.success);
-        } catch {}
+        } catch { }
       }
 
       setSellers(prev => prev.map(s => s.id === seller.id ? { ...s, status: 'Approved', verified: true } : s));
@@ -235,13 +235,12 @@ const SellerVerificationAdminPanel = () => {
                       <td className="px-6 py-4 text-sm text-on-surface-variant">{s.email}</td>
                       <td className="px-6 py-4 text-sm text-on-surface-variant">{s.phone || '—'}</td>
                       <td className="px-6 py-4">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                          s.status === 'Approved' || s.verified
-                            ? 'bg-green-100 text-green-800'
-                            : s.status === 'Rejected'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${s.status === 'Approved' || s.verified
+                          ? 'bg-green-100 text-green-800'
+                          : s.status === 'Rejected'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                          }`}>
                           {s.status === 'Approved' || s.verified ? 'Approved & Verified' : s.status || 'Pending Review'}
                         </span>
                       </td>
