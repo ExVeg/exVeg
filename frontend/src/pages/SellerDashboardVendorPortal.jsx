@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import ImageUploader from '../components/ImageUploader';
 
 const SellerDashboardVendorPortal = () => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const SellerDashboardVendorPortal = () => {
   
   // New Product Form State
   const [newProduct, setNewProduct] = useState({ name: '', price: '', category: '', stock: '' });
+  const [productImages, setProductImages] = useState([]); // [{url, publicId, isPrimary}]
+  const uploaderRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -69,6 +72,20 @@ const SellerDashboardVendorPortal = () => {
     setIsSubmitting(true);
     setSubmitError('');
     try {
+      // Auto-upload any locally selected images that haven't been uploaded yet
+      const finalImages = uploaderRef.current
+        ? await uploaderRef.current.uploadPending()
+        : productImages;
+
+      // Resolve image data from Cloudinary uploads
+      const primaryImg = finalImages.find((img) => img.isPrimary) || finalImages[0];
+      const imageUrl = primaryImg?.url || 'https://via.placeholder.com/300?text=No+Image';
+      const imagePublicId = primaryImg?.publicId || '';
+      const thumbnails = finalImages
+        .filter((img) => !img.isPrimary)
+        .map((img) => img.url);
+      const imagePublicIds = finalImages.map((img) => img.publicId);
+
       const docRef = await addDoc(collection(db, 'products'), {
         name: newProduct.name.trim(),
         category: newProduct.category.trim(),
@@ -76,7 +93,10 @@ const SellerDashboardVendorPortal = () => {
         originalPrice: newProduct.originalPrice ? parseFloat(newProduct.originalPrice) : null,
         stock: parseInt(newProduct.stock),
         description: newProduct.description || '',
-        imageUrl: newProduct.imageUrl || 'https://via.placeholder.com/300?text=No+Image',
+        imageUrl,
+        imagePublicId,
+        thumbnails,
+        imagePublicIds,
         sellerId: user.uid,
         sellerName: userData.businessName || userData.name || 'Verified Seller',
         sellerEmail: user.email || userData.email || '',
@@ -85,16 +105,18 @@ const SellerDashboardVendorPortal = () => {
         status: 'Pending', // Requires Admin Approval
         createdAt: new Date().toISOString()
       });
-      setProducts([...products, { 
-        id: docRef.id, 
+      setProducts([...products, {
+        id: docRef.id,
         name: newProduct.name,
         category: newProduct.category,
         price: parseFloat(newProduct.price),
         stock: parseInt(newProduct.stock),
-        status: 'Pending' 
+        imageUrl,
+        status: 'Pending'
       }]);
       setShowAddProduct(false);
-      setNewProduct({ name: '', price: '', originalPrice: '', category: 'Vegetables', stock: '', description: '', imageUrl: '' });
+      setNewProduct({ name: '', price: '', originalPrice: '', category: 'Vegetables', stock: '', description: '' });
+      setProductImages([]);
       setIsSubmitting(false);
     } catch (error) {
       console.error("Error adding product: ", error);
@@ -427,10 +449,17 @@ const SellerDashboardVendorPortal = () => {
                   <label className="block text-sm font-medium mb-1">Stock Amount</label>
                   <input required type="number" value={newProduct.stock} onChange={e => setNewProduct({...newProduct, stock: e.target.value})} className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none" placeholder="100" />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Image URL</label>
-                  <input type="text" value={newProduct.imageUrl || ''} onChange={e => setNewProduct({...newProduct, imageUrl: e.target.value})} className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none" placeholder="https://..." />
-                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Product Images</label>
+                <ImageUploader
+                  ref={uploaderRef}
+                  resourceType="product"
+                  productId=""
+                  onImagesChange={setProductImages}
+                  existingImages={productImages}
+                  maxImages={5}
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Description</label>

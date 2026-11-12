@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebase';
 import {
   collection, query, where, getDocs,
   addDoc, updateDoc, deleteDoc, doc
 } from 'firebase/firestore';
 import { useAuthState } from '../hooks/useAuthState';
+import ImageUploader from '../components/ImageUploader';
 
 const TOOLS_CATEGORIES = [
   'All', 'Hand Tools', 'Power Tools', 'Irrigation', 'Sprayers', 'Harvesting Equipment', 'Soil Testing', 'Protective Gear', 'Other'
@@ -19,9 +20,12 @@ const ToolProductModal = ({ existing, onClose, onSaved, sellerId, sellerName }) 
     price: existing?.price ?? '',
     stock: existing?.stock ?? '',
     description: existing?.description ?? '',
-    imageUrl: existing?.imageUrl ?? '',
     brand: existing?.brand ?? '',
   });
+  const [toolImages, setToolImages] = useState(
+    existing?.imageUrl ? [{ url: existing.imageUrl, publicId: existing.imagePublicId || '', isPrimary: true }] : []
+  );
+  const uploaderRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -32,13 +36,20 @@ const ToolProductModal = ({ existing, onClose, onSaved, sellerId, sellerName }) 
     setError('');
     setLoading(true);
     try {
+      const finalImages = uploaderRef.current
+        ? await uploaderRef.current.uploadPending()
+        : toolImages;
+      const primaryImg = finalImages.find((img) => img.isPrimary) || finalImages[0];
       const payload = {
         name: form.name.trim(),
         category: form.category.trim(),
         price: parseFloat(form.price),
         stock: parseInt(form.stock),
         description: form.description.trim(),
-        imageUrl: form.imageUrl.trim() || 'https://via.placeholder.com/300?text=Tool',
+        imageUrl: primaryImg?.url || 'https://via.placeholder.com/300?text=Tool',
+        imagePublicId: primaryImg?.publicId || '',
+        thumbnails: finalImages.filter((img) => !img.isPrimary).map((img) => img.url),
+        imagePublicIds: finalImages.map((img) => img.publicId),
         brand: form.brand.trim(),
         type: 'tools',
         sellerId,
@@ -111,9 +122,15 @@ const ToolProductModal = ({ existing, onClose, onSaved, sellerId, sellerName }) 
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Image URL</label>
-            <input type="url" name="imageUrl" value={form.imageUrl} onChange={handleChange}
-              className="w-full p-2 border rounded focus:ring-2 focus:ring-primary outline-none" placeholder="https://..." />
+            <label className="block text-sm font-medium mb-1">Product Images</label>
+            <ImageUploader
+              ref={uploaderRef}
+              resourceType="product"
+              productId=""
+              onImagesChange={setToolImages}
+              existingImages={toolImages}
+              maxImages={5}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Description</label>

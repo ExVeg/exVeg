@@ -7,6 +7,8 @@ const {
   sendSellerApprovalEmail,
   sendProductApprovalEmail
 } = require('./src/checkoutMail');
+const { verifyIdToken, getAdminDb } = require('./src/firebaseAdmin');
+const { generateUploadSignature, deleteCloudinaryImage, validateOwnership } = require('./src/cloudinaryConfig');
 
 dotenv.config();
 
@@ -251,6 +253,84 @@ app.post('/api/translate', async (req, res) => {
   } catch (error) {
     console.warn('Translation endpoint note:', error.message);
     res.status(200).json({ translations: {} });
+  }
+});
+
+// ─── Helper: extract & verify Bearer token ──────────────────────────────────
+async function authenticate(req) {
+  const authHeader = req.headers.authorization || '';
+  if (!authHeader.startsWith('Bearer ')) {
+    throw Object.assign(new Error('Missing or invalid Authorization header.'), { status: 401 });
+  }
+  const token = authHeader.slice(7);
+  const decoded = await verifyIdToken(token);
+  return decoded; // { uid, email, ... }
+}
+
+// ─── POST /api/uploads/signature ────────────────────────────────────────────
+// Returns signed Cloudinary upload params. Never returns API secret.
+app.post('/api/uploads/signature', async (req, res) => {
+  try {
+    const decoded = await authenticate(req);
+    const uid = decoded.uid;
+
+    // Fetch user role from Firestore (never trust frontend)
+    const adminDb = getAdminDb();
+    const userDoc = await adminDb.collection('users').doc(uid).get();
+    if (!userDoc.exists) {
+      return res.status(403).json({ success: false, message: 'User not found in Firestore.' });
+    }
+    const role = userDoc.data().role || '';
+    if (!['Seller', 'Admin'].includes(role)) {
+      return res.status(403).json({ success: false, message: 'Only Sellers and Admins can upload images.' });
+    }
+
+    const { resourceType = 'product', productId = '' } = req.body || {};
+    const allowedTypes = ['product', 'profile', 'review'];
+    if (!allowedTypes.includes(resourceType)) {
+      return res.status(400).json({ success: false, message: `Invalid resourceType. Allowed: ${allowedTypes.join(', ')}` });
+    }
+
+    const signatureParams = generateUploadSignature({ resourceType, uid, subId: productId });
+
+    res.status(200).json({
+      success: true,
+      ...signatureParams,
+    });
+  } catch (err) {
+    const status = err.status || (err.code === 'auth/id-token-expired' ? 401 : 500);
+    console.error('Upload signature error:', err.message);
+    res.status(status).json({ success: false, message: err.message || 'Failed to generate upload signature.' });
+  }
+});
+
+// ─── DELETE /api/uploads/image ──────────────────────────────────────────────
+// Deletes a Cloudinary image. Pass publicId as ?id=... query param to avoid slash issues.
+app.delete('/api/uploads/image', async (req, res) => {
+  try {
+    const decoded = await authenticate(req);
+    const uid = decoded.uid;
+
+    const publicId = req.query.id ? decodeURIComponent(req.query.id) : (req.body?.publicId || '');
+    if (!publicId) {
+      return res.status(400).json({ success: false, message: 'publicId is required.' });
+    }
+
+    // Get user role from Firestore
+    const adminDb = getAdminDb();
+    const userDoc = await adminDb.collection('users').doc(uid).get();
+    const role = userDoc.exists ? (userDoc.data().role || '') : '';
+
+    if (!validateOwnership(publicId, uid, role)) {
+      return res.status(403).json({ success: false, message: 'You do not have permission to delete this image.' });
+    }
+
+    const result = await deleteCloudinaryImage(publicId);
+    res.status(200).json({ success: true, result });
+  } catch (err) {
+    const status = err.status || 500;
+    console.error('Image delete error:', err.message);
+    res.status(status).json({ success: false, message: err.message || 'Failed to delete image.' });
   }
 });
 
